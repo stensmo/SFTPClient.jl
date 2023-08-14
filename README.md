@@ -8,6 +8,8 @@ This is done in Windows by using Command Line (cmd.exe) or Windows PowerShell. i
 Execute "sftp myuser@siteIwantToConnectTo.com" and acccept any certificates. After this you should be able to connect via the Julia SFTP Client. 
 
 Examples:
+```
+
     using SFTP
     sftp = SFTPClient("sftp://test.rebex.net/pub/example/", "demo", "password")
     files=readdir(sftp)
@@ -15,5 +17,10 @@ Examples:
     downloadDir="/tmp/"
     SFTP.download.(sftp, files, downloadDir=downloadDir)
 
+```
+
+```
     You can also use it like this:
     df=DataFrame(CSV.File(SFTP.download(sftp, "/mydir/test.csv")))
+
+```
