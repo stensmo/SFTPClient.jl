@@ -139,7 +139,10 @@ Base.broadcastable(sftp::SFTPClient) = Ref(sftp)
 """
 upload(sftp::SFTPClient, file_name::AbstractString)
 
-Upload (put) a file to the server
+Upload (put) a file to the server. Broadcasting can be used too. 
+
+files=readdir()
+upload.(sftp,files)
 
 """
 function upload(sftp::SFTPClient,

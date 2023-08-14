@@ -1,6 +1,6 @@
 module SFTP
 
-export SFTPClient, readdir, download, cd, rm, rmdir, mkdir, mv
+export SFTPClient, readdir, download,upload, cd, rm, rmdir, mkdir, mv
 
 include("SFTPImpl.jl")
 
