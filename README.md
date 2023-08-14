@@ -1,7 +1,8 @@
 # SFTP in Julia
 Package for working with SFTP in Julia. Built on Downloads.jl, but in my opinion much easier to use. Downloads.jl is in turn based on Curl. 
 
-The SFTP client supports username/password as well as certificates for authentication.
+The SFTP client supports username/password as well as certificates for authentication. 
+
 
 ___Note: You must first use your local sftp client to set up certificates___
 This is done in Windows by using Command Line (cmd.exe) or Windows PowerShell. in Linux use your favorite shell. 
