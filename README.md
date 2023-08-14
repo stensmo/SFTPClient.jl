@@ -3,7 +3,7 @@ Package for working with SFTP in Julia. Built on Downloads.jl, but in my opinion
 
 The SFTP client supports username/password as well as certificates for authentication. 
 
-The folloing methods are supported: readdir, download, upload, cd, rm, rmdir, mkdir, mv
+The following methods are supported: readdir, download, upload, cd, rm, rmdir, mkdir, mv
 
 ___Note: You must first use your local sftp client to set up certificates___
 This is done in Windows by using Command Line (cmd.exe) or Windows PowerShell. in Linux use your favorite shell. 
