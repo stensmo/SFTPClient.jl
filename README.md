@@ -18,9 +18,9 @@ Examples:
     SFTP.download.(sftp, files, downloadDir=downloadDir)
 
 ```
-
-```
     You can also use it like this:
+```
+    
     df=DataFrame(CSV.File(SFTP.download(sftp, "/mydir/test.csv")))
 
 ```
