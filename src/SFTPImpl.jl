@@ -3,7 +3,7 @@ using Downloads
 using LibCURL
 using URIs
 
-mutable struct SFTPClient
+mutable struct SFTP
     downloader::Downloader
     uri::URI
     username::Union{String, Nothing}
@@ -14,43 +14,43 @@ mutable struct SFTPClient
 end
 
 """
- SFTPClient(url::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+ SFTP(url::AbstractString;disable_verify_peer=false, disable_verify_host=false)
  
  Creates a new SFTP client using certificate authentication. Provide the username in the url
 
-  sftp = SFTPClient("sftp://nisse@mysitewhereIhaveACertificate.com")
+  sftp = SFTP("sftp://nisse@mysitewhereIhaveACertificate.com")
   
   Note! Before your first connect you need to connect to the site using your local sftp install, and make sure the certificate works. On Windows, use Windows PowerShell or command prompt.
   sftp nisse@mysitewhereIhaveACertificate.com
 
 """
-function SFTPClient(url::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+function SFTP(url::AbstractString;disable_verify_peer=false, disable_verify_host=false)
     downloader = Downloads.Downloader()
 
-    sftp = SFTPClient(downloader, URI(url), nothing, nothing, disable_verify_peer, disable_verify_host)
+    sftp = SFTP(downloader, URI(url), nothing, nothing, disable_verify_peer, disable_verify_host)
     reset_easy_hook(sftp)
     return sftp
 end
 
 """
-SFTPClient(url::AbstractString, username::AbstractString, password::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+SFTP(url::AbstractString, username::AbstractString, password::AbstractString;disable_verify_peer=false, disable_verify_host=false)
 
-Creates a new SFTPClient:
+Creates a new SFTP Client:
 Example:
-sftp = SFTPClient("sftp://test.rebex.net", "demo", "password")
+sftp = SFTP("sftp://test.rebex.net", "demo", "password")
 Note! Before your first connect you need to go to the site using your local sftp install, and accept the certificate. On Windows, use Windows PowerShell or command prompt.
 sftp demo@test.rebex.net
 Accept the certificate, Provide password as the password. 
 """
-function SFTPClient(url::AbstractString, username::AbstractString, password::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+function SFTP(url::AbstractString, username::AbstractString, password::AbstractString;disable_verify_peer=false, disable_verify_host=false)
     downloader = Downloads.Downloader()
 
-    sftp = SFTPClient(downloader, URI(url), username, password, disable_verify_peer, disable_verify_host)
+    sftp = SFTP(downloader, URI(url), username, password, disable_verify_peer, disable_verify_host)
     reset_easy_hook(sftp)
     return sftp
 end
 
-function reset_easy_hook(sftp::SFTPClient) 
+function reset_easy_hook(sftp::SFTP) 
         
         downloader = sftp.downloader
     
@@ -81,14 +81,14 @@ function reset_easy_hook(sftp::SFTPClient)
 end
 
 
-function handleRelativePath(fileName, sftp::SFTPClient)
+function handleRelativePath(fileName, sftp::SFTP)
     baseUrl = sftp.uri
     resolvedReference = resolvereference(baseUrl, fileName)
     fileName = resolvedReference.path
     return fileName
 end
 
-function ftp_command(sftp::SFTPClient, command::String)
+function ftp_command(sftp::SFTP, command::String)
     slist = Ptr{Cvoid}(0)
   
     slist = curl_slist_append(slist, command)
@@ -133,11 +133,11 @@ function ftp_command(sftp::SFTPClient, command::String)
 end
 
 
-Base.broadcastable(sftp::SFTPClient) = Ref(sftp)
+Base.broadcastable(sftp::SFTP) = Ref(sftp)
 
 
 """
-upload(sftp::SFTPClient, file_name::AbstractString)
+upload(sftp::SFTP, file_name::AbstractString)
 
 Upload (put) a file to the server. Broadcasting can be used too. 
 
@@ -145,7 +145,7 @@ files=readdir()
 upload.(sftp,files)
 
 """
-function upload(sftp::SFTPClient,
+function upload(sftp::SFTP,
     file_name::AbstractString)
 
        
@@ -166,26 +166,26 @@ end
 
 """
 SFTP.download(
-    sftp::SFTPClient,
+    sftp::SFTP,
     file_name::AbstractString,
      output = tempname();downloadDir::Union{String, Nothing}=nothing)
 
      Download a file. You can download it and use it directly, or save it to a file. Specify downloadDir if you want to download files. You can also use broadcasting.
     Example:
 
-    sftp = SFTPClient("sftp://test.rebex.net/pub/example/", "demo", "password")
+    sftp = SFTP("sftp://test.rebex.net/pub/example/", "demo", "password")
     files=readdir(sftp)
     downloadDir="/tmp"
-    SFTP.download.(sftp, files, downloadDir=downloadDir)
+    SFTPClient.download.(sftp, files, downloadDir=downloadDir)
 
     You can also use it like this:
-    df=DataFrame(CSV.File(SFTP.download(sftp, "/mydir/test.csv")))
+    df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
 
 
      
 """
 function download(
-    sftp::SFTPClient,
+    sftp::SFTP,
     file_name::AbstractString,
      output = tempname();downloadDir::Union{String, Nothing}=nothing)
 
@@ -213,12 +213,12 @@ function download(
 end
 
 """
-readdir(sftp::SFTPClient, join::Bool = false, sort::Bool = true)
+readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)
 
 Reads the current directory. Returns a vector of Strings just like the regular readdir function.
 
 """
-function Base.readdir(sftp::SFTPClient, join::Bool = false, sort::Bool = true)
+function Base.readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)
     output = nothing
 
     try
@@ -258,12 +258,12 @@ function Base.readdir(sftp::SFTPClient, join::Bool = false, sort::Bool = true)
 end
 
 """
-    cd(sftp::SFTPClient, dir::AbstractString)
+    cd(sftp::SFTP, dir::AbstractString)
     
     Change the directory for the SFTP client. 
 
 """
-function Base.cd(sftp::SFTPClient, dir::AbstractString)
+function Base.cd(sftp::SFTP, dir::AbstractString)
     
     oldUrl = sftp.uri
 
@@ -283,41 +283,41 @@ end
 
 
 """
-    rm(sftp::SFTPClient, file_name::AbstractString)
+    rm(sftp::SFTP, file_name::AbstractString)
 
     Remove (delete) the file
 
 """
-function Base.rm(sftp::SFTPClient, file_name::AbstractString)
+function Base.rm(sftp::SFTP, file_name::AbstractString)
     resp = ftp_command(sftp, "rm $(handleRelativePath(file_name, sftp))")
     return nothing
 end
 
 """
-    rmdir(sftp::SFTPClient, dir_name::AbstractString)
+    rmdir(sftp::SFTP, dir_name::AbstractString)
 
     Remove (delete) the directory
 """
-function rmdir(sftp::SFTPClient, dir_name::AbstractString)
+function rmdir(sftp::SFTP, dir_name::AbstractString)
     resp = ftp_command(sftp, "rmdir $(handleRelativePath(dir_name, sftp))")
     return nothing
 end
 
 """
-    mkdir(sftp::SFTPClient, dir::AbstractString)
+    mkdir(sftp::SFTP, dir::AbstractString)
 
     Create a directory
 
 
 """
-function Base.mkdir(sftp::SFTPClient, dir::AbstractString)
+function Base.mkdir(sftp::SFTP, dir::AbstractString)
     resp = ftp_command(sftp, "mkdir $(handleRelativePath(dir, sftp))")
     return nothing
 end
 
 """
 mv(
-    sftp::SFTPClient,
+    sftp::SFTP,
     old_name::AbstractString,
     new_name::AbstractString;
 )
@@ -326,7 +326,7 @@ Move, i.e., rename the file.
 
 """
 function Base.mv(
-    sftp::SFTPClient,
+    sftp::SFTP,
     old_name::AbstractString,
     new_name::AbstractString;
 )
