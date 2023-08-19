@@ -12,17 +12,17 @@ Execute "sftp myuser@siteIwantToConnectTo.com" and acccept any certificates. Aft
 Examples:
 ```
 
-    using SFTP
-    sftp = SFTPClient("sftp://test.rebex.net/pub/example/", "demo", "password")
+    using SFTPClient
+    sftp = SFTP("sftp://test.rebex.net/pub/example/", "demo", "password")
     files=readdir(sftp)
     # On Windows, replace this with an appropriate path
     downloadDir="/tmp/"
-    SFTP.download.(sftp, files, downloadDir=downloadDir)
+    SFTPClient.download.(sftp, files, downloadDir=downloadDir)
 
 ```
     You can also use it like this:
 ```
     
-    df=DataFrame(CSV.File(SFTP.download(sftp, "/mydir/test.csv")))
+    df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
 
 ```
