@@ -7,10 +7,9 @@ The following methods are supported: readdir, download, upload, cd, rm, rmdir, m
 
 ___Note: You must first use your local sftp client to set up certificates___
 This is done in Windows by using Command Line (cmd.exe) or Windows PowerShell. in Linux use your favorite shell. 
-Execute "sftp myuser@siteIwantToConnectTo.com" and acccept any certificates. After this you should be able to connect via the Julia SFTP Client. 
+Execute "sftp -c aes256-ctr myuser@siteIwantToConnectTo.com" and acccept any certificates. After this you should be able to connect via the Julia SFTP Client. 
 
-If you are unfortunate that your computer generated a Ed25519 key in the previous step, then it is much harder since Ed25519 won't currently work. ecdsa-sha2-nistp256 will work. Check your known hosts file 
-On windows it should be in C:\Users\{your_user}\.ssh
+If it does not work, check shour .ssh file
 
 Examples:
 ```
