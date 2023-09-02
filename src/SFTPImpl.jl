@@ -21,7 +21,7 @@ end
   sftp = SFTP("sftp://nisse@mysitewhereIhaveACertificate.com")
   
   Note! Before your first connect you need to connect to the site using your local sftp install, and make sure the certificate works. On Windows, use Windows PowerShell or command prompt.
-  sftp nisse@mysitewhereIhaveACertificate.com
+  Execute: sftp -o HostKeyAlgorithms=ecdsa-sha2-nistp256 nisse@mysitewhereIhaveACertificate.com
 
 """
 function SFTP(url::AbstractString;disable_verify_peer=false, disable_verify_host=false)
@@ -39,7 +39,7 @@ Creates a new SFTP Client:
 Example:
 sftp = SFTP("sftp://test.rebex.net", "demo", "password")
 Note! Before your first connect you need to go to the site using your local sftp install, and accept the certificate. On Windows, use Windows PowerShell or command prompt.
-sftp demo@test.rebex.net
+sftp -o HostKeyAlgorithms=ecdsa-sha2-nistp256 demo@test.rebex.net
 Accept the certificate, Provide password as the password. 
 """
 function SFTP(url::AbstractString, username::AbstractString, password::AbstractString;disable_verify_peer=false, disable_verify_host=false)
@@ -170,7 +170,8 @@ SFTP.download(
     file_name::AbstractString,
      output = tempname();downloadDir::Union{String, Nothing}=nothing)
 
-     Download a file. You can download it and use it directly, or save it to a file. Specify downloadDir if you want to download files. You can also use broadcasting.
+     Download a file. You can download it and use it directly, or save it to a file. 
+     Specify downloadDir if you want to save downloaded files. You can also use broadcasting.
     Example:
 
     sftp = SFTP("sftp://test.rebex.net/pub/example/", "demo", "password")
