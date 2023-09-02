@@ -11,7 +11,7 @@ Execute "sftp myuser@siteIwantToConnectTo.com" and acccept any certificates. Not
 
 If it does not work, check your known_hosts file in your .ssh directory. ED25519 keys do not seem to work.
 
-Use the ssh-keyscan tool: From command line, execute: ssh-keyscan -H [hostname],[ip_address]. Add the ecdsa-sha2-nistp256 line to your known_hosts file. This file is located in your .ssh-directory. This is located in C:\Users\\{your_user}\\.ssh on Windows and ~/.ssh on Linux.
+Use the ssh-keyscan tool: From command line, execute: ssh-keyscan -H [hostname],[ip_address]. Add the ecdsa-sha2-nistp256 line to your known_hosts file. This file is located in your .ssh-directory. This is directory is located in C:\Users\\{your_user}\\.ssh on Windows and ~/.ssh on Linux.
 
 Examples:
 ```
