@@ -61,7 +61,7 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Documenter: doctest
-            using SFTPCllient     # change MyAwesomePackage to the name of your package
+            using SFTPClient     # change MyAwesomePackage to the name of your package
             doctest(SFTPClient)' # change MyAwesomePackage to the name of your package
       - run: julia --project=docs docs/make.jl
         env:
