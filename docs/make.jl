@@ -1,6 +1,7 @@
-using Documenter, SFTPClient
+using Documenter
+using SFTPClient
 
-makedocs(sitename="Julia SFTPClient Documentation")
+makedocs(sitename="Documentation")
 
 deploydocs(
     repo = "github.com/stensmo/SFTPClient.jl.git",
