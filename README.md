@@ -28,7 +28,9 @@ Examples:
     SFTPClient.download.(sftp, files, downloadDir=downloadDir)
 
 ```
+   
     You can also use it like this:
+    
 ```
     
     df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
