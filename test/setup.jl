@@ -1,8 +1,8 @@
-using SFTP
+using SFTPClient
 using Test
 
 
-sftp = SFTPClient("sftp://test.rebex.net/pub/example/", "demo", "password")
+sftp = SFTP("sftp://test.rebex.net/pub/example/", "demo", "password")
 files = readdir(sftp)
 
 actualFiles = ["KeyGenerator.png",

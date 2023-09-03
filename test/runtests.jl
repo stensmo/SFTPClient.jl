@@ -1,4 +1,4 @@
-using SFTP
+using SFTPClient
 using Test
 
 
