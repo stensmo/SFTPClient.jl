@@ -21,7 +21,7 @@ ___Note: Setting up certificate authentication___
 
 To set up certificate authentication, create the certificates in the ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub files. On Windows these are located in C:\Users\\{your user}\\.ssh. 
 
-Then use the function  sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser") to create an SFTP object.
+Then use the function  sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser") to create a SFTP type.
 
 More instructions for setting up the files id_rsa, and id_rsa.pub will follow
 
