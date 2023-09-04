@@ -27,11 +27,13 @@ Example files
 
 ___in "known_hosts"___
 mysitewhereIhaveACertificate.com ssh-rsa sdsadxcvacvljsdflsajflasjdfasldjfsdlfjsldfj
+
 ___in "id_rsa"___
 -----BEGIN RSA PRIVATE KEY-----
 .....
 cu1sTszTVkP5/rL3CbI+9rgsuCwM67k3DiH4JGOzQpMThPvolCg=
 -----END RSA PRIVATE KEY-----
+
 ___in id_rsa.pub___
 ssh-rsa AAAAB3...SpjX/4t Comment here
 
