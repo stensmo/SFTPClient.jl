@@ -40,6 +40,7 @@ ___in id_rsa.pub___
 ssh-rsa AAAAB3...SpjX/4t Comment here
 
 After setting up the files, test using your local sftp client:
+
 ssh myuser@mysitewhereIhaveACertificate.com
 
 Examples:
