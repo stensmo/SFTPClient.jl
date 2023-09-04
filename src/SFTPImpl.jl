@@ -14,7 +14,7 @@ mutable struct SFTP
 end
 
 """
- SFTP(url::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
  
  Creates a new SFTP client using certificate authentication. Provide the username in the url
 
