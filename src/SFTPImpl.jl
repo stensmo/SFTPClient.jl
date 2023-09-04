@@ -18,16 +18,21 @@ end
  
  Creates a new SFTP client using certificate authentication. Provide the username in the url
 
-  sftp = SFTP("sftp://nisse@mysitewhereIhaveACertificate.com")
+  sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser")
   
-  Note! Before your first connect you need to connect to the site using your local sftp install, and make sure the certificate works. On Windows, use Windows PowerShell or command prompt.
-  Execute: sftp -o HostKeyAlgorithms=ecdsa-sha2-nistp256 nisse@mysitewhereIhaveACertificate.com
+  Note! You must provide the username for this to work. 
+
+  Before using this method, you must set up your certificates in ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub
+
+  Of course, the server need to be in the known_hosts file as well. 
+
+  Test using your local client first: ssh myuser@mysitewhereIhaveACertificate.com
 
 """
-function SFTP(url::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
     downloader = Downloads.Downloader()
 
-    sftp = SFTP(downloader, URI(url), nothing, nothing, disable_verify_peer, disable_verify_host)
+    sftp = SFTP(downloader, URI(url), username, nothing, disable_verify_peer, disable_verify_host)
     reset_easy_hook(sftp)
     return sftp
 end
@@ -335,7 +340,6 @@ function Base.mv(
     return nothing
 
 end
-
 
 
 
