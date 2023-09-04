@@ -39,6 +39,9 @@ cu1sTszTVkP5/rL3CbI+9rgsuCwM67k3DiH4JGOzQpMThPvolCg=
 ___in id_rsa.pub___
 ssh-rsa AAAAB3...SpjX/4t Comment here
 
+After setting up the files, test using your local sftp client:
+ssh myuser@mysitewhereIhaveACertificate.com
+
 Examples:
 ```
 
