@@ -5,6 +5,19 @@ using Test
 sftp = SFTP("sftp://test.rebex.net/pub/example/", "demo", "password")
 files = readdir(sftp)
 
+tempDir = "/tmp/"
+
+if Sys.iswindows()
+    tempDir = ENV["Temp"] * "\\"
+end
+
+SFTPClient.download.(sftp, files, downloadDir=tempDir)
+
+cd(sftp, "../")
+dirs = readdir(sftp)
+
+
+
 actualFiles = ["KeyGenerator.png",
 "KeyGeneratorSmall.png",
 "ResumableTransfer.png",
