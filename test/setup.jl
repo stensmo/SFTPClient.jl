@@ -7,6 +7,7 @@ files = readdir(sftp)
 
 tempDir = "/tmp/"
 
+
 if Sys.iswindows()
     tempDir = ENV["Temp"] * "\\"
 end
@@ -16,6 +17,9 @@ SFTPClient.download.(sftp, files, downloadDir=tempDir)
 cd(sftp, "../")
 dirs = readdir(sftp)
 
+cd(sftp, "..")
+
+SFTPClient.download.(sftp, "readme.txt", downloadDir=".")
 
 
 actualFiles = ["KeyGenerator.png",

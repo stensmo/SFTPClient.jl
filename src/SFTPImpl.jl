@@ -13,6 +13,12 @@ mutable struct SFTP
    
 end
 
+if Sys.iswindows()
+    const fileSeparator = "\\"
+else
+    const fileSeparator = "/"
+end
+
 """
 function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
  
@@ -201,7 +207,14 @@ function download(
      end
 
      if downloadDir != nothing
-        
+        if !isdirpath(downloadDir)
+            downloadDir = downloadDir * fileSeparator
+        end
+
+        if downloadDir == "."
+            downloadDir = downloadDir * fileSeparator
+        end
+
         output = downloadDir * file_name
      end
 
@@ -276,6 +289,12 @@ function Base.cd(sftp::SFTP, dir::AbstractString)
 
     # If we fail, set back to the old url
     try
+
+
+        if !isdirpath(dir)
+            dir = dir * "/"
+        end
+
         newUrl = resolvereference(oldUrl, dir)
 
         show(newUrl)

@@ -9,6 +9,7 @@ include("setup.jl")
     @test files == actualFiles
     @test isfile(tempDir * "KeyGenerator.png")
     @test dirs == ["example"]
+    @test isfile("readme.txt")
 
 end
 
