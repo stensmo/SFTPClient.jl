@@ -2,6 +2,7 @@ using FileWatching
 using Downloads
 using LibCURL
 using URIs
+using CSV
 
 mutable struct SFTP
     downloader::Downloader
@@ -10,7 +11,6 @@ mutable struct SFTP
     password::Union{String, Nothing}
     disable_verify_peer::Bool
     disable_verify_host::Bool
-   
 end
 
 if Sys.iswindows()
@@ -18,6 +18,71 @@ if Sys.iswindows()
 else
     const fileSeparator = "/"
 end
+
+
+function check_and_create_fingerprint(hostNameOrIP::AbstractString)
+    dir = homedir()
+
+    try
+
+        known_hosts_file = joinpath(dir, ".ssh/known_hosts")
+        typevec = [String, String, String]
+
+        rows=CSV.File(known_hosts_file;delim=" ",types=typevec,header=false)
+        for row in rows
+            row[1] != hostNameOrIP && continue
+            
+            println("Found host in known_hosts")
+            # check the entry we found
+
+            fingerprintAlgo = row[2]
+            #These are known to work
+            (fingerprintAlgo == "ecdsa-sha2-nistp256" || fingerprintAlgo == "ecdsa-sha2-nistp256" || fingerprintAlgo ==  "ecdsa-sha2-nistp521"  || fingerprintAlgo == "ssh-rsa" ) && return
+            println("Warning: Correct fingerprint not found in known_hosts")
+        end
+
+        println("Creating fingerprint")
+        create_fingerprint(hostNameOrIP)
+
+    catch e
+        println(e)
+        create_fingerprint(hostNameOrIP)
+
+    end
+
+    return nothing
+
+end
+
+
+function Base.show(io::IO, sftp::SFTP)
+ 
+    join(io, [
+        "URL:       $(sftp.uri)",
+        "Username:  $(sftp.username)",
+    ], "\n")
+end
+
+function create_fingerprint(hostNameOrIP::AbstractString)
+    
+    #run(`mkdir -p ~/.ssh/`)
+    #run(`touch ~/.ssh/known_hosts`)
+    #run(`ssh-keyscan -t ssh-rsa test.rebex.net >> ~/.ssh/known_hosts`)
+    dir = homedir()
+
+    known_hosts = joinpath(dir, ".ssh/known_hosts")
+    keyscan = readchomp(`ssh-keyscan -t ssh-rsa $(hostNameOrIP)`)
+    println("Adding fingerprint $(keyscan) to known_hosts")
+    open(known_hosts, "a") do f
+        println(f, keyscan)
+    end
+
+
+    #println(keyscan)
+
+    return true
+end
+
 
 """
 function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
@@ -38,25 +103,41 @@ function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=
 function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
     downloader = Downloads.Downloader()
 
-    sftp = SFTP(downloader, URI(url), username, nothing, disable_verify_peer, disable_verify_host)
+    uri = URI(url)
+
+
+    
+
+    sftp = SFTP(downloader, uri, username, nothing, disable_verify_peer, disable_verify_host)
     reset_easy_hook(sftp)
     return sftp
 end
 
 """
-SFTP(url::AbstractString, username::AbstractString, password::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+function SFTP(url::AbstractString, username::AbstractString, password::AbstractString;create_known_hosts_entry=true, disable_verify_peer=false, disable_verify_host=false)
 
 Creates a new SFTP Client:
+url: The url to connect to, e.g., sftp://mysite.com
+username: The username to use
+password: The users password
+create_known_hosts_entry: Automatically create an entry in known hosts
+
+
 Example:
 sftp = SFTP("sftp://test.rebex.net", "demo", "password")
-Note! Before your first connect you need to go to the site using your local sftp install, and accept the certificate. On Windows, use Windows PowerShell or command prompt.
-sftp -o HostKeyAlgorithms=ecdsa-sha2-nistp256 demo@test.rebex.net
-Accept the certificate, Provide password as the password. 
+
+
 """
-function SFTP(url::AbstractString, username::AbstractString, password::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+function SFTP(url::AbstractString, username::AbstractString, password::AbstractString;create_known_hosts_entry=true, disable_verify_peer=false, disable_verify_host=false)
     downloader = Downloads.Downloader()
 
-    sftp = SFTP(downloader, URI(url), username, password, disable_verify_peer, disable_verify_host)
+    uri = URI(url)
+
+    host = uri.host
+
+    create_known_hosts_entry && check_and_create_fingerprint(host)
+
+    sftp = SFTP(downloader, uri, username, password, disable_verify_peer, disable_verify_host)
     reset_easy_hook(sftp)
     return sftp
 end

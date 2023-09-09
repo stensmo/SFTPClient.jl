@@ -39,9 +39,7 @@ jobs:
             ${{ runner.os }}-test-${{ env.cache-name }}-
             ${{ runner.os }}-test-
             ${{ runner.os }}-
-      - run: |
-          mkdir -p ~/.ssh/ && touch ~/.ssh/known_hosts
-          ssh-keyscan -t ecdsa-sha2-nistp256 test.rebex.net >> ~/.ssh/known_hosts
+
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1

@@ -5,17 +5,35 @@ The SFTP client supports username/password as well as certificates for authentic
 
 The following methods are supported: readdir, download, upload, cd, rm, rmdir, mkdir, mv
 
-___Note: You must first use your local sftp client to set up certificates___
-This is done in Windows by using Command Line (cmd.exe) or Windows PowerShell. On Linux, use your favorite shell. 
-Execute "sftp -o HostKeyAlgorithms=ecdsa-sha2-nistp256 myuser@siteIwantToConnectTo.com" and acccept any certificates. After this you should be able to connect via the Julia SFTP Client. 
 
+Examples:
+```
+
+    using SFTPClient
+    sftp = SFTP("sftp://test.rebex.net/pub/example/", "demo", "password")
+    files=readdir(sftp)
+    # On Windows, replace this with an appropriate path
+    downloadDir="/tmp/"
+    SFTPClient.download.(sftp, files, downloadDir=downloadDir)
+
+```
+   
+    You can also use it like this:
+    
+```
+    
+    df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
+
+```
+
+[API Documentation](https://stensmo.github.io/SFTPClient.jl/dev/)
 
 ___Note: Only do this if you have issues___
 If it does not work, check your known_hosts file in your .ssh directory. ED25519 keys do not seem to work.
 
 Use the ssh-keyscan tool: From command line, execute: ssh-keyscan -H [hostname],[ip_address]. Add the ecdsa-sha2-nistp256 line to your known_hosts file. This file is located in your .ssh-directory. This is directory is located in C:\Users\\{your_user}\\.ssh on Windows and ~/.ssh on Linux.
 
-[API Documentation](https://stensmo.github.io/SFTPClient.jl/dev/)
+
 
 ___Note: Setting up certificate authentication___
 
@@ -43,22 +61,3 @@ After setting up the files, test using your local sftp client:
 
 ssh myuser@mysitewhereIhaveACertificate.com
 
-Examples:
-```
-
-    using SFTPClient
-    sftp = SFTP("sftp://test.rebex.net/pub/example/", "demo", "password")
-    files=readdir(sftp)
-    # On Windows, replace this with an appropriate path
-    downloadDir="/tmp/"
-    SFTPClient.download.(sftp, files, downloadDir=downloadDir)
-
-```
-   
-    You can also use it like this:
-    
-```
-    
-    df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
-
-```
