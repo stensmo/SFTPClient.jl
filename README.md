@@ -18,10 +18,10 @@ Examples:
 
 ```
    
-    You can also use it like this:
+  
     
 ```
-    
+    #You can also use it like this
     df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
 
 ```
