@@ -26,7 +26,7 @@ Examples:
 
 ```
 
-[API Documentation](https://stensmo.github.io/SFTPClient.jl/dev/)
+[API Documentation](https://stensmo.github.io/SFTPClient.jl/stable/)
 
 ___Note: Only do this if you have issues___
 If it does not work, check your known_hosts file in your .ssh directory. ED25519 keys do not seem to work.
