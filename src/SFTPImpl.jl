@@ -70,6 +70,9 @@ function create_fingerprint(hostNameOrIP::AbstractString)
     #run(`ssh-keyscan -t ssh-rsa test.rebex.net >> ~/.ssh/known_hosts`)
     dir = homedir()
 
+    sshdir = joinpath(dir, ".ssh/")
+    !isdir( sshdir) && mkdir(sshdir)
+
     known_hosts = joinpath(dir, ".ssh/known_hosts")
     keyscan = readchomp(`ssh-keyscan -t ssh-rsa $(hostNameOrIP)`)
     println("Adding fingerprint $(keyscan) to known_hosts")
