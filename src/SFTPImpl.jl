@@ -66,9 +66,7 @@ end
 
 function create_fingerprint(hostNameOrIP::AbstractString)
     
-    #run(`mkdir -p ~/.ssh/`)
-    #run(`touch ~/.ssh/known_hosts`)
-    #run(`ssh-keyscan -t ssh-rsa test.rebex.net >> ~/.ssh/known_hosts`)
+
     dir = homedir()
 
     sshdir = joinpath(dir, ".ssh/")
@@ -81,8 +79,6 @@ function create_fingerprint(hostNameOrIP::AbstractString)
         println(f, keyscan)
     end
 
-
-    #println(keyscan)
 
     return true
 end
@@ -179,8 +175,10 @@ end
 
 function handleRelativePath(fileName, sftp::SFTP)
     baseUrl = sftp.uri
+    println("base url $baseUrl")
     resolvedReference = resolvereference(baseUrl, escapeuri(fileName))
     fileName = resolvedReference.path
+    println(fileName)
     return fileName
 end
 
@@ -375,13 +373,13 @@ function Base.cd(sftp::SFTP, dir::AbstractString)
 
     # If we fail, set back to the old url
     try
-
-
+        dir = escapeuri(dir)
+        #println("setting dir $dir")
         if !isdirpath(dir)
             dir = dir * "/"
         end
 
-        newUrl = resolvereference(oldUrl, escapeuri(dir))
+        newUrl = resolvereference(oldUrl, dir)
 
         show(newUrl)
        
