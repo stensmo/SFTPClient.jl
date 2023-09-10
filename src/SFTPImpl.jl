@@ -42,6 +42,7 @@ function check_and_create_fingerprint(hostNameOrIP::AbstractString)
         end
 
         println("Creating fingerprint")
+        println("Hostname: $hostNameOrIP")
         create_fingerprint(hostNameOrIP)
 
     catch e
@@ -106,7 +107,7 @@ function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=
 function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
     downloader = Downloads.Downloader()
 
-    uri = URI(url)
+    uri = URI(escapeuri(url))
 
 
     
@@ -178,7 +179,7 @@ end
 
 function handleRelativePath(fileName, sftp::SFTP)
     baseUrl = sftp.uri
-    resolvedReference = resolvereference(baseUrl, fileName)
+    resolvedReference = resolvereference(baseUrl, escapeuri(fileName))
     fileName = resolvedReference.path
     return fileName
 end
@@ -247,7 +248,7 @@ function upload(sftp::SFTP,
         open(file_name, "r") do local_file
 
 
-            file = basename(file_name)
+            file = escapeuri(basename(file_name))
 
             uri = resolvereference(sftp.uri, file)
 
@@ -303,7 +304,8 @@ function download(
      end
 
      
-     uri = resolvereference(sftp.uri, file_name)
+     uri = resolvereference(sftp.uri, escapeuri(file_name))
+
 
     try
    
@@ -379,7 +381,7 @@ function Base.cd(sftp::SFTP, dir::AbstractString)
             dir = dir * "/"
         end
 
-        newUrl = resolvereference(oldUrl, dir)
+        newUrl = resolvereference(oldUrl, escapeuri(dir))
 
         show(newUrl)
        
