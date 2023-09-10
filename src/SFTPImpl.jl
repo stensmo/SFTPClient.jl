@@ -103,7 +103,7 @@ function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=
 function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
     downloader = Downloads.Downloader()
 
-    uri = URI(escapeuri(url))
+    uri = URI(url)
 
 
     
