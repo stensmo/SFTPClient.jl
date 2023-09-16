@@ -11,6 +11,10 @@ mutable struct SFTP
     password::Union{String, Nothing}
     disable_verify_peer::Bool
     disable_verify_host::Bool
+    verbose::Bool
+    public_key_file::Union{String, Nothing}
+    private_key_file::Union{String, Nothing}
+
 end
 
 struct SFTPStatStruct
@@ -91,11 +95,32 @@ function create_fingerprint(hostNameOrIP::AbstractString)
     return true
 end
 
+"""
+function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+ 
+ Creates a new SFTP client using certificate authentication, and keys in the files specified
+
+  sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser", "test.pub", "test.pem")
+  
+
+"""
+function SFTP(url::AbstractString, username::AbstractString, public_key_file::AbstractString, private_key_file::AbstractString;disable_verify_peer=false, disable_verify_host=false, verbose=false)
+    downloader = Downloads.Downloader()
+
+    uri = URI(url)
+
+
+    sftp = SFTP(downloader, uri, username, nothing, disable_verify_peer, disable_verify_host, verbose, public_key_file, private_key_file)
+    reset_easy_hook(sftp)
+    return sftp
+end
+
+
 
 """
 function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
  
- Creates a new SFTP client using certificate authentication. Provide the username in the url
+ Creates a new SFTP client using certificate authentication. 
 
   sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser")
   
@@ -103,18 +128,20 @@ function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=
 
   Before using this method, you must set up your certificates in ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub
 
-  Of course, the server need to be in the known_hosts file as well. 
+  Of course, the host need to be in the known_hosts file as well. 
 
   Test using your local client first: ssh myuser@mysitewhereIhaveACertificate.com
 
+  See other method if you want to use files not in ~/ssh/
+
 """
-function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false, verbose=false)
     downloader = Downloads.Downloader()
 
     uri = URI(url)
 
 
-    sftp = SFTP(downloader, uri, username, nothing, disable_verify_peer, disable_verify_host)
+    sftp = SFTP(downloader, uri, username, nothing, disable_verify_peer, disable_verify_host, verbose, nothing, nothing)
     reset_easy_hook(sftp)
     return sftp
 end
@@ -134,7 +161,7 @@ sftp = SFTP("sftp://test.rebex.net", "demo", "password")
 
 
 """
-function SFTP(url::AbstractString, username::AbstractString, password::AbstractString;create_known_hosts_entry=true, disable_verify_peer=false, disable_verify_host=false)
+function SFTP(url::AbstractString, username::AbstractString, password::AbstractString;create_known_hosts_entry=true, disable_verify_peer=false, disable_verify_host=false, verbose=false)
     downloader = Downloads.Downloader()
 
     uri = URI(url)
@@ -143,7 +170,7 @@ function SFTP(url::AbstractString, username::AbstractString, password::AbstractS
 
     create_known_hosts_entry && check_and_create_fingerprint(host)
 
-    sftp = SFTP(downloader, uri, username, password, disable_verify_peer, disable_verify_host)
+    sftp = SFTP(downloader, uri, username, password, disable_verify_peer, disable_verify_host, verbose, nothing, nothing)
     reset_easy_hook(sftp)
     return sftp
 end
@@ -172,9 +199,23 @@ function reset_easy_hook(sftp::SFTP)
             Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_SSL_VERIFYPEER , 1)
         end
 
+     
+        if sftp.public_key_file != nothing
+         Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_SSH_PUBLIC_KEYFILE, sftp.public_key_file)
+        end
+
+        if sftp.private_key_file != nothing
+            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_SSH_PRIVATE_KEYFILE, sftp.private_key_file)
+        end
+
+        if sftp.verbose
+            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_VERBOSE, 1)
+        end
 
         Downloads.Curl.setopt(easy, CURLOPT_DIRLISTONLY, 1)
-      
+
+
+        
         
     end
 end
@@ -210,6 +251,19 @@ function ftp_command(sftp::SFTP, command::String)
     if sftp.disable_verify_peer
     
         Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_SSL_VERIFYPEER , 1)
+    end
+
+ 
+    if sftp.public_key_file != nothing
+     Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_SSH_PUBLIC_KEYFILE, sftp.public_key_file)
+    end
+
+    if sftp.private_key_file != nothing
+        Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_SSH_PRIVATE_KEYFILE, sftp.private_key_file)
+    end
+
+    if sftp.verbose
+        Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_VERBOSE, 1)
     end
 
 
@@ -300,7 +354,6 @@ function Base.stat(sftp::SFTP, file::AbstractString)
 
 
 end
-
 
 
 
@@ -407,6 +460,8 @@ function Base.readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)
             sftp.uri = URI(uriString)
         end
 
+        println("URI String $uriString")
+
         dir = sftp.uri.path
     
 
@@ -448,7 +503,7 @@ function Base.cd(sftp::SFTP, dir::AbstractString)
 
     # If we fail, set back to the old url
     try
-        dir = escapeuri(dir)
+        #dir = escapeuri(dir)
         #println("setting dir $dir")
         if !isdirpath(dir)
             dir = dir * "/"
