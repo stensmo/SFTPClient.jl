@@ -24,6 +24,9 @@ Examples:
     #You can also use it like this
     df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
 
+    # For certificate authentication, you can do this (since 0.3.8)
+    sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser", "cert.pub", "cert.pem")
+
 ```
 
 [API Documentation](https://stensmo.github.io/SFTPClient.jl/stable/)
