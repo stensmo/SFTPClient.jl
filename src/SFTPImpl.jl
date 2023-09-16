@@ -13,6 +13,14 @@ mutable struct SFTP
     disable_verify_host::Bool
 end
 
+struct SFTPStatStruct
+    desc::String
+    mode    :: UInt
+    size    :: Int64
+    mtime   :: Float64
+    
+end
+
 if Sys.iswindows()
     const fileSeparator = "\\"
 else
@@ -106,8 +114,6 @@ function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=
     uri = URI(url)
 
 
-    
-
     sftp = SFTP(downloader, uri, username, nothing, disable_verify_peer, disable_verify_host)
     reset_easy_hook(sftp)
     return sftp
@@ -141,6 +147,7 @@ function SFTP(url::AbstractString, username::AbstractString, password::AbstractS
     reset_easy_hook(sftp)
     return sftp
 end
+
 
 function reset_easy_hook(sftp::SFTP) 
         
@@ -228,6 +235,74 @@ end
 
 
 Base.broadcastable(sftp::SFTP) = Ref(sftp)
+
+function parseStat(stats::Vector{String})
+
+    io = IOBuffer();
+    
+
+
+    for i=1:length(s)
+        c = s[i]
+        if c == ' '
+           if s[i-1] != ' '
+            write(io, c)
+           end
+
+        else 
+            write(io, c)
+        end
+    end
+    
+    return io
+
+end
+
+function Base.stat(sftp::SFTP, file::AbstractString)
+
+    #isdir(st::StatStruct) = filemode(st) & 0xf000 == 0x4000
+    sftp.downloader.easy_hook = (easy, info) -> begin
+        if sftp.username != nothing
+            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_USERNAME, sftp.username)
+        end
+        if sftp.password != nothing
+            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_PASSWORD, sftp.password)
+        end
+
+    end
+
+    output = nothing
+
+    try
+        uriString = string(sftp.uri)
+        if !endswith(uriString, "/")
+            uriString = uriString * "/"
+            sftp.uri = URI(uriString)
+        end
+
+        dir = sftp.uri.path
+    
+        io = IOBuffer();
+
+        output = Downloads.download(uriString, io; sftp.downloader)
+
+        # Don't know why this is necessary
+        res = String(take!(io))
+        io2 = IOBuffer(res)
+
+        files = readlines(io2;keep=false)
+        
+
+        return files
+    catch e
+        rethrow()
+    end
+
+
+end
+
+
+
 
 
 """
