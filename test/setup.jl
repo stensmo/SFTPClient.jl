@@ -2,7 +2,10 @@ using SFTPClient
 using Test
 
 
-sftp = SFTP("sftp://test.rebex.net/pub/example/", "demo", "password")
+sftp = SFTP("sftp://test.rebex.net", "demo", "password")
+cd(sftp, "/pub/example")
+
+
 files = readdir(sftp)
 
 tempDir = "/tmp/"
