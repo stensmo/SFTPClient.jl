@@ -1,6 +1,18 @@
-# SFTPClient.jl Documentation
+# SFTPClient.jl 
 
-```@autodocs
-Modules = [SFTPClient]
-Order   = [:function, :type]
-```
+*An SFTP Client for Julia.*
+
+A package for communicating with SFTP Servers, supporting username and password, or certificate authentication. 
+
+## SFTPClient.jl Features
+
+    - readdir
+    - download
+    - upload 
+    - cd
+    - rm 
+    - rmdir
+    - mkdir
+    - mv
+
+
