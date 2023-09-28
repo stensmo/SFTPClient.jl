@@ -2,7 +2,7 @@
 
 *An SFTP Client for Julia.*
 
-A package for communicating with SFTP Servers, supporting username and password, or certificate authentication. 
+A julia package for communicating with SFTP Servers, supporting username and password, or certificate authentication. 
 
 ## SFTPClient Features
 
