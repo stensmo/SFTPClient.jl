@@ -1,4 +1,4 @@
-# SFTPClient.jl Documentation
+# SFTPClient API Documentation
 
 ```@autodocs
 Modules = [SFTPClient]

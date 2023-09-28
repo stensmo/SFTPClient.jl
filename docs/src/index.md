@@ -1,10 +1,10 @@
-# SFTPClient.jl 
+# SFTPClient 
 
 *An SFTP Client for Julia.*
 
 A package for communicating with SFTP Servers, supporting username and password, or certificate authentication. 
 
-## SFTPClient.jl Features
+## SFTPClient Features
 
     - readdir
     - download
@@ -14,5 +14,31 @@ A package for communicating with SFTP Servers, supporting username and password,
     - rmdir
     - mkdir
     - mv
+## SFTPClient Installation
 
+Install by running:
+
+import Pkg;Pkg.add("SFTPClient")
+
+## SFTPClient Examples
+
+```
+
+    using SFTPClient
+    sftp = SFTP("sftp://test.rebex.net/pub/example/", "demo", "password")
+    files=readdir(sftp)
+    # On Windows, replace this with an appropriate path
+    downloadDir="/tmp/"
+    SFTPClient.download.(sftp, files, downloadDir=downloadDir)
+
+```
+
+```
+    #You can also use it like this
+    df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
+
+    # For certificate authentication, you can do this (since 0.3.8)
+    sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser", "cert.pub", "cert.pem")
+
+```
 
