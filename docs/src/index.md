@@ -1,4 +1,4 @@
-# SFTPClient 
+# Julia SFTP Client 
 
 *An SFTP Client for Julia.*
 
