@@ -10,5 +10,5 @@ DocumenterTools = "35a29f4d-8980-5a13-9543-d66fff28ecb8"
 SFTPClient = "6f0ef2a9-1531-47bc-8c87-f4ce50005508"
  
 [compat]
-Documenter = "0.27"
+Documenter = "1.1.1"
 
