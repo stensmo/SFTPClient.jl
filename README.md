@@ -3,7 +3,7 @@ Package for working with SFTP in Julia. Built on Downloads.jl, but in my opinion
 
 The SFTP client supports username/password as well as certificates for authentication. 
 
-The following methods are supported: readdir, download, upload, cd, rm, rmdir, mkdir, mv
+The following methods are supported: readdir, download, upload, cd, rm, rmdir, mkdir, mv, sftpstat (like stat)
  
 
 Examples:
@@ -16,6 +16,8 @@ Examples:
     downloadDir="/tmp/"
     SFTPClient.download.(sftp, files, downloadDir=downloadDir)
 
+    statStructs = stat(sftp)
+
 ```
    
   
@@ -26,6 +28,7 @@ Examples:
 
     # For certificate authentication, you can do this (since 0.3.8)
     sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser", "cert.pub", "cert.pem")
+    # The cert.pem is your certificate (private key), and the cert.pub can be obtained from the private key as following: ssh-keygen -y  -f ./cert.pem. Save the output into "cert.pub". 
 
 ```
 

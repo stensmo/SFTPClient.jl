@@ -3,6 +3,7 @@ using Downloads
 using LibCURL
 using URIs
 using CSV
+using Dates
 
 mutable struct SFTP
     downloader::Downloader
@@ -20,9 +21,11 @@ end
 struct SFTPStatStruct
     desc::String
     mode    :: UInt
+    nlink   :: Int
+    uid     :: String
+    gid     :: String
     size    :: Int64
     mtime   :: Float64
-    
 end
 
 if Sys.iswindows()
@@ -187,67 +190,7 @@ function SFTP(url::AbstractString, username::AbstractString, password::AbstractS
     return sftp
 end
 
-
-function reset_easy_hook(sftp::SFTP) 
-        
-        downloader = sftp.downloader
-    
-
-        downloader.easy_hook = (easy, info) -> begin
-        if sftp.username != nothing
-            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_USERNAME, sftp.username)
-        end
-        if sftp.password != nothing
-            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_PASSWORD, sftp.password)
-        end
-
-        if sftp.disable_verify_host
-        
-            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_SSL_VERIFYHOST , 0)
-        end
-
-        if sftp.disable_verify_peer
-        
-            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_SSL_VERIFYPEER , 1)
-        end
-
-     
-        if sftp.public_key_file != nothing
-         Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_SSH_PUBLIC_KEYFILE, sftp.public_key_file)
-        end
-
-        if sftp.private_key_file != nothing
-            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_SSH_PRIVATE_KEYFILE, sftp.private_key_file)
-        end
-
-        if sftp.verbose
-            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_VERBOSE, 1)
-        end
-
-        Downloads.Curl.setopt(easy, CURLOPT_DIRLISTONLY, 1)
-
-
-        
-        
-    end
-end
-
-
-function handleRelativePath(fileName, sftp::SFTP)
-    baseUrl = sftp.uri
-    println("base url $baseUrl")
-    resolvedReference = resolvereference(baseUrl, escapeuri(fileName))
-    fileName = resolvedReference.path
-    println(fileName)
-    return fileName
-end
-
-function ftp_command(sftp::SFTP, command::String)
-    slist = Ptr{Cvoid}(0)
-  
-    slist = curl_slist_append(slist, command)
-
-    sftp.downloader.easy_hook = (easy, info) -> begin
+function setStandardOptions(sftp, easy, info)
     if sftp.username != nothing
         Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_USERNAME, sftp.username)
     end
@@ -278,7 +221,40 @@ function ftp_command(sftp::SFTP, command::String)
         Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_VERBOSE, 1)
     end
 
+end
 
+function reset_easy_hook(sftp::SFTP) 
+        
+        downloader = sftp.downloader
+        
+
+        downloader.easy_hook = (easy, info) -> begin
+        setStandardOptions(sftp, easy, info)
+        Downloads.Curl.setopt(easy, CURLOPT_DIRLISTONLY, 1)
+
+
+        
+        
+    end
+end
+
+
+function handleRelativePath(fileName, sftp::SFTP)
+    baseUrl = sftp.uri
+    #println("base url $baseUrl")
+    resolvedReference = resolvereference(baseUrl, escapeuri(fileName))
+    fileName = resolvedReference.path
+    #println(fileName)
+    return fileName
+end
+
+function ftp_command(sftp::SFTP, command::String)
+    slist = Ptr{Cvoid}(0)
+  
+    slist = curl_slist_append(slist, command)
+
+    sftp.downloader.easy_hook = (easy, info) -> begin
+        setStandardOptions(sftp, easy, info)
   
         Downloads.Curl.setopt(easy,  CURLOPT_QUOTE, slist)
     end
@@ -302,38 +278,100 @@ end
 
 Base.broadcastable(sftp::SFTP) = Ref(sftp)
 
-function parseStat(stats::Vector{String})
 
-    io = IOBuffer();
-    
+Base.isdir(st::SFTPStatStruct) = filemode(st) & 0xf000 == 0x4000
+isfile(st::SFTPStatStruct) = filemode(st) & 0xf000 == 0x8000
 
+Base.filemode(st::SFTPStatStruct) = st.mode
 
-    for i=1:length(s)
-        c = s[i]
-        if c == ' '
-           if s[i-1] != ' '
-            write(io, c)
-           end
+function parseDate(monthPart::String, dayPart::String, yearOrTimePart::String)
+     yearStr::String = occursin(":",yearOrTimePart) ? string(year(now())) : yearOrTimePart
+     timeStr::String = !occursin(":",yearOrTimePart) ? "00:00" : yearOrTimePart
 
-        else 
-            write(io, c)
-        end
-    end
-    
-    return io
+     dateTime = DateTime("$monthPart $dayPart $yearStr $timeStr",dateformat"u d yyyy H:M ")
+ 
+    return datetime2unix(dateTime)
+end
+
+function parseMode(s::String)::UInt
+    length(s) != 10 && error("Not correct lenght")
+
+    dirChar = s[1]
+
+    dir = (dirChar == 'd') ? 0x4000 : 0x8000
+
+    owner = strToNumber(s[2:4])
+    group = strToNumber(s[5:7])
+    anyone = strToNumber(s[8:10])
+
+    return dir + owner * 8^2 + group * 8^1 + anyone * 8^0
 
 end
 
-function Base.stat(sftp::SFTP, file::AbstractString)
+function strToNumber(s::String)::Int64
+    b1 = (s[1] != '-') ?  4 : 0
+    b2 = (s[2] != '-') ?  2 : 0
+    b3 = (s[3] != '-') ?  1 : 0
+    return b1+b2+b3
+end
 
-    #isdir(st::StatStruct) = filemode(st) & 0xf000 == 0x4000
+function parseStat(s::String)
+
+    resultVec = Vector{String}(undef, 9)
+
+    lastIndex = 1
+
+    parseCounter = 1
+
+    stringLength = length(s)
+
+    i = 1
+    
+    while (i < stringLength)
+        c = s[i]
+        if c == ' '
+            resultVec[parseCounter] = s[lastIndex:i-1]
+            parseCounter += 1
+            
+            while (i < stringLength && c == ' ')
+                i += 1
+                c = s[i]
+            end
+
+            lastIndex = i
+
+            if parseCounter == 9 
+                resultVec[parseCounter] = s[lastIndex:end]
+                break
+            end
+
+        end
+
+        i += 1
+    end
+    return resultVec
+    
+end
+
+
+
+
+function makeStruct(stats::Vector{String})::SFTPStatStruct
+    SFTPStatStruct(stats[9], parseMode(stats[1]),  parse(Int64, stats[2]), stats[3], stats[4], parse(Int64, stats[5]), parseDate(stats[6], stats[7], stats[8]))  
+end
+
+
+"""
+sftpstat(sftp::SFTP)
+
+Like Julia stat, but returns a Vector of SFTPStatStructs. Note that you can only run this on directories. Can be used for checking if a file was modified, and much more.
+
+"""
+function sftpstat(sftp::SFTP)
+
+
     sftp.downloader.easy_hook = (easy, info) -> begin
-        if sftp.username != nothing
-            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_USERNAME, sftp.username)
-        end
-        if sftp.password != nothing
-            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_PASSWORD, sftp.password)
-        end
+        setStandardOptions(sftp, easy, info)
 
     end
 
@@ -346,20 +384,26 @@ function Base.stat(sftp::SFTP, file::AbstractString)
             sftp.uri = URI(uriString)
         end
 
-        dir = sftp.uri.path
     
         io = IOBuffer();
 
-        output = Downloads.download(uriString, io; sftp.downloader)
+        try
+            output = Downloads.download(uriString, io; sftp.downloader)
+            
+            
+        finally 
+            reset_easy_hook(sftp)
+        end
+
 
         # Don't know why this is necessary
         res = String(take!(io))
         io2 = IOBuffer(res)
 
-        files = readlines(io2;keep=false)
+        stats = readlines(io2;keep=false)
         
-
-        return files
+        return makeStruct.(parseStat.(stats))
+        #return files
     catch e
         rethrow()
     end
