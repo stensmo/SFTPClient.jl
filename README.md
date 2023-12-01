@@ -34,6 +34,10 @@ Examples:
 
 [API Documentation](https://stensmo.github.io/SFTPClient.jl/stable/)
 
+#Troubleshooting
+
+If you get: RequestError: Failure establishing ssh session: -5, Unable to exchange encryption keys while requesting... Try and upgrade to Julia 1.10. It seems to be a bug in an underlying library.
+
 ___Note: Only do this if you have issues___
 If it does not work, check your known_hosts file in your .ssh directory. ED25519 keys do not seem to work.
 
