@@ -16,7 +16,7 @@ Examples:
     downloadDir="/tmp/"
     SFTPClient.download.(sftp, files, downloadDir=downloadDir)
 
-    statStructs = stat(sftp)
+    statStructs = sftpstat(sftp)
 
 ```
    
