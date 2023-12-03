@@ -14,6 +14,7 @@ A julia package for communicating with SFTP Servers, supporting username and pas
     - rmdir
     - mkdir
     - mv
+    - sftpstat (like stat, but more limited)
 ## SFTPClient Installation
 
 Install by running:
@@ -39,6 +40,8 @@ import Pkg;Pkg.add("SFTPClient")
 
     # For certificate authentication, you can do this (since 0.3.8)
     sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser", "cert.pub", "cert.pem")
+   
+    # The cert.pem is your certificate (private key), and the cert.pub can be obtained from the private # key as following: ssh-keygen -y  -f ./cert.pem. Save the output into "cert.pub". 
 
 ```
 

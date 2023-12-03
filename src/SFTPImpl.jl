@@ -126,6 +126,7 @@ function SFTP(url::AbstractString, username::AbstractString, public_key_file::Ab
 
 
     sftp = SFTP(downloader, uri, username, nothing, disable_verify_peer, disable_verify_host, verbose, public_key_file, private_key_file)
+    slashEnd(sftp)
     reset_easy_hook(sftp)
     return sftp
 end
@@ -157,6 +158,7 @@ function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=
 
 
     sftp = SFTP(downloader, uri, username, nothing, disable_verify_peer, disable_verify_host, verbose, nothing, nothing)
+    slashEnd(sftp)
     reset_easy_hook(sftp)
     return sftp
 end
@@ -186,8 +188,20 @@ function SFTP(url::AbstractString, username::AbstractString, password::AbstractS
     create_known_hosts_entry && check_and_create_fingerprint(host)
 
     sftp = SFTP(downloader, uri, username, password, disable_verify_peer, disable_verify_host, verbose, nothing, nothing)
+    slashEnd(sftp)
     reset_easy_hook(sftp)
     return sftp
+end
+
+function slashEnd(sftp)
+    path = sftp.uri.path
+    if !endswith(path, "/") 
+        path = path * "/"
+    end
+    newUrl = resolvereference(sftp.uri, escapepath(path))
+        
+    sftp.uri = newUrl
+
 end
 
 function setStandardOptions(sftp, easy, info)
@@ -239,11 +253,20 @@ function reset_easy_hook(sftp::SFTP)
 end
 
 
+function sftpescapepath(path::String)
+    
+    return escapepath(path)
+end
+
+
+#=
+    Note, this function should not use URL:s since CURL:s api need spaces
+=#
 function handleRelativePath(fileName, sftp::SFTP)
-    baseUrl = sftp.uri
+    baseUrl = string(sftp.uri)
     #println("base url $baseUrl")
     resolvedReference = resolvereference(baseUrl, escapeuri(fileName))
-    fileName = resolvedReference.path
+    fileName = "'" * unescapeuri(resolvedReference.path) * "'"
     #println(fileName)
     return fileName
 end
@@ -280,7 +303,7 @@ Base.broadcastable(sftp::SFTP) = Ref(sftp)
 
 
 Base.isdir(st::SFTPStatStruct) = filemode(st) & 0xf000 == 0x4000
-isfile(st::SFTPStatStruct) = filemode(st) & 0xf000 == 0x8000
+Base.isfile(st::SFTPStatStruct) = filemode(st) & 0xf000 == 0x8000
 
 Base.filemode(st::SFTPStatStruct) = st.mode
 
@@ -516,7 +539,7 @@ function Base.readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)
             sftp.uri = URI(uriString)
         end
 
-        println("URI String $uriString")
+        #println("URI String $uriString")
 
         dir = sftp.uri.path
     
@@ -559,19 +582,21 @@ function Base.cd(sftp::SFTP, dir::AbstractString)
 
     # If we fail, set back to the old url
     try
-        #dir = escapeuri(dir)
-        #println("setting dir $dir")
+    
         if !isdirpath(dir)
             dir = dir * "/"
         end
 
-        newUrl = resolvereference(oldUrl, dir)
+        newUrl = resolvereference(oldUrl,sftpescapepath(dir))
 
         show(newUrl)
        
         sftp.uri = newUrl
+        show(sftp.uri)
         readdir(sftp)
     catch e
+        println("CD Failed")
+        show(e)
         sftp.uri = oldUrl
     end
     return nothing
@@ -607,6 +632,8 @@ end
 
 """
 function Base.mkdir(sftp::SFTP, dir::AbstractString)
+    println("mkdir")
+    #resp = ftp_command(sftp, """mkdir '/home/svc-magento/domains/stanleysecuritysolutions.se/shared/magento2/var/urapidflow/test/import/Ny katalog/dir with space'""")
     resp = ftp_command(sftp, "mkdir $(handleRelativePath(dir, sftp))")
     return nothing
 end

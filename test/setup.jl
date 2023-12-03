@@ -42,6 +42,8 @@ actualFiles = ["KeyGenerator.png",
 "readme.txt",
 "winceclient.png",
 "winceclientSmall.png"]
+
+
 actualStructs = [
 
  SFTPStatStruct(".", 0x00000000000041c0, 2, "demo", "users", 0, 1.6802208e9)
