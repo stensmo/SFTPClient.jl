@@ -1,7 +1,7 @@
 # Julia SFTP Client 
 Package for working with SFTP in Julia. Built on Downloads.jl, but in my opinion much easier to use. Downloads.jl is in turn based on Curl. 
 
-The SFTP Julia client supports username/password as well as certificates for authentication. 
+The Julia SFTP client supports username/password as well as certificates for authentication. 
 
 The following methods are supported: readdir, download, upload, cd, rm, rmdir, mkdir, mv, sftpstat (like stat)
  
