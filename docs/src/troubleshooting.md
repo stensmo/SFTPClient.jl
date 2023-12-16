@@ -34,10 +34,6 @@ After setting up the files, test using your local sftp client:
 
 ssh myuser@mysitewhereIhaveACertificate.com
 
-___Known bugs___
-
-Currently some operations, e.g. mv fails if the remote path has a space or special character in it. It works for files having space in them, but not for directories having space in them. 
-
 
 
 

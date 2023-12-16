@@ -1,7 +1,7 @@
 # Julia SFTP Client 
 Package for working with SFTP in Julia. Built on Downloads.jl, but in my opinion much easier to use. Downloads.jl is in turn based on Curl. 
 
-The SFTP client supports username/password as well as certificates for authentication. 
+The Julia SFTP client supports username/password as well as certificates for authentication. 
 
 The following methods are supported: readdir, download, upload, cd, rm, rmdir, mkdir, mv, sftpstat (like stat)
  
@@ -41,8 +41,5 @@ If you get: RequestError: Failure establishing ssh session: -5, Unable to exchan
 
 
 
-___Known bugs___
-
-Currently some operations, e.g. mv fails if the remote path has a space or special character in it. It works for files having space in them, but not for directories having space in them. 
 
 

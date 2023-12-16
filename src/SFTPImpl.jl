@@ -265,9 +265,9 @@ end
 function handleRelativePath(fileName, sftp::SFTP)
     baseUrl = string(sftp.uri)
     #println("base url $baseUrl")
-    resolvedReference = resolvereference(baseUrl, escapeuri(fileName))
+    resolvedReference = resolvereference(baseUrl, fileName)
     fileName = "'" * unescapeuri(resolvedReference.path) * "'"
-    #println(fileName)
+    println(fileName)
     return fileName
 end
 
@@ -298,13 +298,73 @@ function ftp_command(sftp::SFTP, command::String)
 
 end
 
+function walkdir(sftp::SFTP, dir; topdown=true, follow_symlinks=false, onerror=throw)
+    function _walkdir(chnl, root)
+        tryf(f, p) = try
+                f(p)
+            catch err
+                isa(err, IOError) || rethrow()
+                try
+                    onerror(err)
+                catch err2
+                    close(chnl, err2)
+                end
+                return
+            end
+        content = tryf(readdir, root)
+        content === nothing && return
+        dirs = Vector{eltype(content)}()
+        files = Vector{eltype(content)}()
+        for name in content
+            path = joinpath(root, name)
+
+            # If we're not following symlinks, then treat all symlinks as files
+            if (!follow_symlinks && something(tryf(islink, path), true)) || !something(tryf(isdir, path), false)
+                push!(files, name)
+            else
+                push!(dirs, name)
+            end
+        end
+
+        if topdown
+            push!(chnl, (root, dirs, files))
+        end
+        for dir in dirs
+            _walkdir(chnl, joinpath(root, dir))
+        end
+        if !topdown
+            push!(chnl, (root, dirs, files))
+        end
+        nothing
+    end
+    return Channel{Tuple{String,Vector{String},Vector{String}}}(chnl -> _walkdir(chnl, root))
+end
+
+
+
+
 
 Base.broadcastable(sftp::SFTP) = Ref(sftp)
 
+"""
+Base.isdir(st::SFTPStatStruct) 
 
+Test if st is a directory
+"""
 Base.isdir(st::SFTPStatStruct) = filemode(st) & 0xf000 == 0x4000
+
+"""
+Base.isfile(st::SFTPStatStruct) 
+
+Test if st is a file
+"""
 Base.isfile(st::SFTPStatStruct) = filemode(st) & 0xf000 == 0x8000
 
+"""
+Base.isdir(st::SFTPStatStruct) 
+
+Get the filemode of the directory
+"""
 Base.filemode(st::SFTPStatStruct) = st.mode
 
 function parseDate(monthPart::String, dayPart::String, yearOrTimePart::String)
@@ -595,9 +655,8 @@ function Base.cd(sftp::SFTP, dir::AbstractString)
         show(sftp.uri)
         readdir(sftp)
     catch e
-        println("CD Failed")
-        show(e)
         sftp.uri = oldUrl
+        rethrow()
     end
     return nothing
 end
@@ -632,8 +691,7 @@ end
 
 """
 function Base.mkdir(sftp::SFTP, dir::AbstractString)
-    println("mkdir")
-    #resp = ftp_command(sftp, """mkdir '/home/svc-magento/domains/stanleysecuritysolutions.se/shared/magento2/var/urapidflow/test/import/Ny katalog/dir with space'""")
+ 
     resp = ftp_command(sftp, "mkdir $(handleRelativePath(dir, sftp))")
     return nothing
 end
