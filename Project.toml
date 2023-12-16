@@ -1,7 +1,7 @@
 name = "SFTPClient"
 uuid = "6f0ef2a9-1531-47bc-8c87-f4ce50005508"
 authors = ["Erik Stensmo "]
-version = "0.4.0"
+version = "0.4.1"
 
 [deps]
 ArgTools = "0dad84c5-d112-42e6-8d28-ef12dabb789f"

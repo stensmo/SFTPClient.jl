@@ -111,8 +111,8 @@ function create_fingerprint(hostNameOrIP::AbstractString)
 end
 
 """
-function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
- 
+SFTP(url::AbstractString, username::AbstractString, public_key_file::AbstractString, private_key_file::AbstractString;disable_verify_peer=false, disable_verify_host=false, verbose=false)
+
  Creates a new SFTP client using certificate authentication, and keys in the files specified
 
   sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser", "test.pub", "test.pem")
@@ -134,7 +134,7 @@ end
 
 
 """
-function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+ SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
  
  Creates a new SFTP client using certificate authentication. 
 
@@ -164,7 +164,7 @@ function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=
 end
 
 """
-function SFTP(url::AbstractString, username::AbstractString, password::AbstractString;create_known_hosts_entry=true, disable_verify_peer=false, disable_verify_host=false)
+ SFTP(url::AbstractString, username::AbstractString, password::AbstractString;create_known_hosts_entry=true, disable_verify_peer=false, disable_verify_host=false)
 
 Creates a new SFTP Client:
 url: The url to connect to, e.g., sftp://mysite.com
@@ -298,11 +298,50 @@ function ftp_command(sftp::SFTP, command::String)
 
 end
 
-function walkdir(sftp::SFTP, dir; topdown=true, follow_symlinks=false, onerror=throw)
+function sftpstat2(sftp, dir::String)
+    
+    stats = sftpstat(sftp, dir)
+    a = filter(x->x.desc != "." && x.desc != "..",stats )
+    return a;
+end
+
+function myjoinpath(path::AbstractString, name::AbstractString)
+    path == "." && return name
+    #println("path $path")
+    #println("name $name")
+    path*"/" * name * "/"
+
+end
+
+
+"""
+    walkdir(sftp::SFTP, root; topdown=true, follow_symlinks=false, onerror=throw)
+    Return an iterator that walks the directory tree of a directory.
+    The iterator returns a tuple containing `(rootpath, dirs, files)`.
+
+    
+    # Examples
+    ```julia
+    for (root, dirs, files) in walkdir(sftp, ".")
+        println("Directories in \$root")
+        for dir in dirs
+            println(joinpath(root, dir)) # path to directories
+        end
+        println("Files in \$root")
+        for file in files
+            println(joinpath(root, file)) # path to files
+        end
+    end
+    ```
+
+"""
+function walkdir(sftp::SFTP, root; topdown=true, follow_symlinks=false, onerror=throw)
     function _walkdir(chnl, root)
-        tryf(f, p) = try
-                f(p)
+   
+        tryf2( f, sftp, p) = try
+                f(sftp, p)
             catch err
+                show(err)
                 isa(err, IOError) || rethrow()
                 try
                     onerror(err)
@@ -311,15 +350,38 @@ function walkdir(sftp::SFTP, dir; topdown=true, follow_symlinks=false, onerror=t
                 end
                 return
             end
-        content = tryf(readdir, root)
+
+            tryf( f, p) = try
+                f(p)
+            catch err
+                show(err)
+                isa(err, IOError) || rethrow()
+                try
+                    onerror(err)
+                catch err2
+                    
+                    close(chnl, err2)
+                end
+                return
+            end
+
+        content = tryf2(sftpstat2, sftp , root)
+
         content === nothing && return
-        dirs = Vector{eltype(content)}()
-        files = Vector{eltype(content)}()
-        for name in content
-            path = joinpath(root, name)
+        dirs = Vector{String}()
+        files = Vector{String}()
+        for statstruct in content
+ 
+            name = statstruct.desc
+           
+            path = myjoinpath(root, name)
+            
+   
+            isadir = tryf(isdir, statstruct)
+      
 
             # If we're not following symlinks, then treat all symlinks as files
-            if (!follow_symlinks && something(tryf(islink, path), true)) || !something(tryf(isdir, path), false)
+            if (!follow_symlinks && something(tryf(islink, statstruct), true)) || !something(tryf(isdir, statstruct), false)
                 push!(files, name)
             else
                 push!(dirs, name)
@@ -330,7 +392,7 @@ function walkdir(sftp::SFTP, dir; topdown=true, follow_symlinks=false, onerror=t
             push!(chnl, (root, dirs, files))
         end
         for dir in dirs
-            _walkdir(chnl, joinpath(root, dir))
+            _walkdir(chnl, myjoinpath(root, dir))
         end
         if !topdown
             push!(chnl, (root, dirs, files))
@@ -345,6 +407,16 @@ end
 
 
 Base.broadcastable(sftp::SFTP) = Ref(sftp)
+
+
+"""
+    islink(path) -> Bool
+
+Return `true` if `path` is a symbolic link, `false` otherwise.
+"""
+Base.islink(st::SFTPStatStruct) = filemode(st) & 0xf000 == 0xa000
+
+
 
 """
 Base.isdir(st::SFTPStatStruct) 
@@ -443,14 +515,23 @@ function makeStruct(stats::Vector{String})::SFTPStatStruct
     SFTPStatStruct(stats[9], parseMode(stats[1]),  parse(Int64, stats[2]), stats[3], stats[4], parse(Int64, stats[5]), parseDate(stats[6], stats[7], stats[8]))  
 end
 
-
 """
 sftpstat(sftp::SFTP)
 
 Like Julia stat, but returns a Vector of SFTPStatStructs. Note that you can only run this on directories. Can be used for checking if a file was modified, and much more.
 
 """
-function sftpstat(sftp::SFTP)
+
+sftpstat(sftp::SFTP) = sftpstat(sftp::SFTP, ".")
+
+
+"""
+sftpstat(sftp::SFTP, path::AbstractString)
+
+Like Julia stat, but returns a Vector of SFTPStatStructs. Note that you can only run this on directories. Can be used for checking if a file was modified, and much more.
+
+"""
+function sftpstat(sftp::SFTP, path::AbstractString)
 
 
     sftp.downloader.easy_hook = (easy, info) -> begin
@@ -461,17 +542,18 @@ function sftpstat(sftp::SFTP)
     output = nothing
 
     try
-        uriString = string(sftp.uri)
-        if !endswith(uriString, "/")
-            uriString = uriString * "/"
-            sftp.uri = URI(uriString)
+
+        if !isdirpath(path)
+            path = path * "/"
         end
 
-    
+        newUrl = resolvereference(sftp.uri,sftpescapepath(path))
+
+
         io = IOBuffer();
 
         try
-            output = Downloads.download(uriString, io; sftp.downloader)
+            output = Downloads.download(string(newUrl), io; sftp.downloader)
             
             
         finally 
@@ -649,10 +731,10 @@ function Base.cd(sftp::SFTP, dir::AbstractString)
 
         newUrl = resolvereference(oldUrl,sftpescapepath(dir))
 
-        show(newUrl)
+        #show(newUrl)
        
         sftp.uri = newUrl
-        show(sftp.uri)
+        #show(sftp.uri)
         readdir(sftp)
     catch e
         sftp.uri = oldUrl
