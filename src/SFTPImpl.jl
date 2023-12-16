@@ -315,7 +315,7 @@ end
 
 
 """
-    walkdir(sftp::SFTP, root; topdown=true, follow_symlinks=false, onerror=throw)
+    SFTPClient.walkdir(sftp::SFTP, root; topdown=true, follow_symlinks=false, onerror=throw)
     Return an iterator that walks the directory tree of a directory.
     The iterator returns a tuple containing `(rootpath, dirs, files)`.
 
@@ -608,7 +608,7 @@ end
 
 
 """
-SFTP.download(
+SFTPClient.download(
     sftp::SFTP,
     file_name::AbstractString,
      output = tempname();downloadDir::Union{String, Nothing}=nothing)
