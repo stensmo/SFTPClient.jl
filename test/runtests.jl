@@ -11,6 +11,7 @@ include("setup.jl")
     @test isfile(tempDir * "KeyGenerator.png")
     @test dirs == ["example"]
     @test isfile("readme.txt")
+    @test walkdirFiles == walkdirResults
 
 end
 

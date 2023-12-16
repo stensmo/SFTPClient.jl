@@ -25,6 +25,8 @@ cd(sftp, "..")
 
 SFTPClient.download.(sftp, "readme.txt", downloadDir=".")
 
+(walkdirRoot, walkdirDirs, walkdirFiles) = walkdir(sftp, ".")
+
 
 actualFiles = ["KeyGenerator.png",
 "KeyGeneratorSmall.png",
@@ -64,3 +66,5 @@ actualStructs = [
  SFTPStatStruct("winceclientSmall.png", 0x0000000000008180, 1, "demo", "users", 6146, 1.1742624e9)
  SFTPStatStruct("WinFormClient.png", 0x0000000000008180, 1, "demo", "users", 80000, 1.1742624e9)
  SFTPStatStruct("WinFormClientSmall.png", 0x0000000000008180, 1, "demo", "users", 17911, 1.1742624e9)]
+
+ walkdirResults = ("/pub//example/", String[], ["imap-console-client.png", "KeyGenerator.png", "KeyGeneratorSmall.png", "mail-editor.png", "mail-send-winforms.png", "mime-explorer.png", "pocketftp.png", "pocketftpSmall.png", "pop3-browser.png", "pop3-console-client.png", "readme.txt", "ResumableTransfer.png", "winceclient.png", "winceclientSmall.png", "WinFormClient.png", "WinFormClientSmall.png"])
