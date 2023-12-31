@@ -33,7 +33,7 @@ Examples:
 
 ```
 
-[API Documentation](https://stensmo.github.io/SFTPClient.jl/stable/)
+[API Documentation](https://stensmo.github.io/SFTPClient.jl/stable/reference/)
 
 # Troubleshooting
 
