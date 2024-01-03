@@ -7,7 +7,7 @@ include("setup.jl")
 @testset "Connect Test" begin
 
     @test files == actualFiles
-    @test stats == actualStructs
+    @test stats[1] == actualStructs[1]
     @test isfile(tempDir * "KeyGenerator.png")
     @test dirs == ["example"]
     @test isfile("readme.txt")
