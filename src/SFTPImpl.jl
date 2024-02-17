@@ -41,9 +41,8 @@ function check_and_create_fingerprint(hostNameOrIP::AbstractString)
     try
 
         known_hosts_file = joinpath(dir, ".ssh/known_hosts")
-        typevec = [String, String, String]
-
-        rows=CSV.File(known_hosts_file;delim=" ",types=typevec,header=false)
+     
+        rows=CSV.File(known_hosts_file;delim=" ",types=String,header=false)
         for row in rows
             row[1] != hostNameOrIP && continue
             
