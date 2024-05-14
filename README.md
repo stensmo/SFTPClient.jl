@@ -25,8 +25,9 @@ Examples:
 ```
     #You can also use it like this
     df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
-
-    # For certificate authentication, you can do this (since 0.3.8)
+    # For certificaes you can use this for setting it up
+    sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser")
+    # Since 0.3.8 you can also do this
     sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser", "cert.pub", "cert.pem") # Assumes cert.pub and cert.pem is in your current path
     # The cert.pem is your certificate (private key), and the cert.pub can be obtained from the private key.
     # ssh-keygen -y  -f ./cert.pem. Save the output into "cert.pub". 
