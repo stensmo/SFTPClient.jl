@@ -27,7 +27,7 @@ Examples:
     df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
 
     # For certificate authentication, you can do this (since 0.3.8)
-    sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser", "cert.pub", "cert.pem")
+    sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser", "cert.pub", "cert.pem") # Assumes cert.pub and cert.pem is in your current path
     # The cert.pem is your certificate (private key), and the cert.pub can be obtained from the private key.
     # ssh-keygen -y  -f ./cert.pem. Save the output into "cert.pub". 
 
