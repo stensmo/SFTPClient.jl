@@ -25,7 +25,7 @@ Examples:
 ```
     #You can also use it like this
     df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
-    # For certificaes you can use this for setting it up
+    # For certificates you can use this for setting it up
     sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser")
     # Since 0.3.8 you can also do this
     sftp = SFTP("sftp://mysitewhereIhaveACertificate.com", "myuser", "cert.pub", "cert.pem") # Assumes cert.pub and cert.pem is in your current path
