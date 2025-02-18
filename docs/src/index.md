@@ -10,6 +10,7 @@ A julia package for communicating with SFTP Servers, supporting username and pas
     - download
     - upload 
     - cd
+    - walkdir
     - rm 
     - rmdir
     - mkdir
