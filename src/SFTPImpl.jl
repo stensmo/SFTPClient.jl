@@ -40,7 +40,7 @@ function check_and_create_fingerprint(hostNameOrIP::AbstractString)
 
     try
 
-        known_hosts_file = joinpath(dir, ".ssh/known_hosts")
+        known_hosts_file = joinpath(dir, ".ssh", "known_hosts")
      
         rows=CSV.File(known_hosts_file;delim=" ",types=String,header=false)
         for row in rows
@@ -83,10 +83,10 @@ function create_fingerprint(hostNameOrIP::AbstractString)
 
     dir = homedir()
 
-    sshdir = joinpath(dir, ".ssh/")
+    sshdir = joinpath(dir, ".ssh")
     !isdir( sshdir) && mkdir(sshdir)
 
-    known_hosts = joinpath(dir, ".ssh/known_hosts")
+    known_hosts = joinpath(dir, ".ssh", "known_hosts")
     keyscan = ""
     try 
         keyscan = readchomp(`ssh-keyscan -t ssh-rsa $(hostNameOrIP)`)
