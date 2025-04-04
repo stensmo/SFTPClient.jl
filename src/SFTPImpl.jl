@@ -655,7 +655,7 @@ readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)
 Reads the current directory. Returns a vector of Strings just like the regular readdir function.
 
 """
-function readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)
+function Base.readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)
     output = nothing
 
     try
@@ -702,7 +702,7 @@ end
     Change the directory for the SFTP client. 
 
 """
-function cd(sftp::SFTP, dir::AbstractString)
+function Base.cd(sftp::SFTP, dir::AbstractString)
     
     oldUrl = sftp.uri
 
@@ -734,7 +734,7 @@ end
     Remove (delete) the file
 
 """
-function rm(sftp::SFTP, file_name::AbstractString)
+function Base.rm(sftp::SFTP, file_name::AbstractString)
     resp = ftp_command(sftp, "rm $(handleRelativePath(file_name, sftp))")
     return nothing
 end
@@ -756,7 +756,7 @@ end
 
 
 """
-function mkdir(sftp::SFTP, dir::AbstractString)
+function Base.mkdir(sftp::SFTP, dir::AbstractString)
  
     resp = ftp_command(sftp, "mkdir $(handleRelativePath(dir, sftp))")
     return nothing
@@ -772,7 +772,7 @@ mv(
 Move, i.e., rename the file. 
 
 """
-function mv(
+function Base.mv(
     sftp::SFTP,
     old_name::AbstractString,
     new_name::AbstractString;
