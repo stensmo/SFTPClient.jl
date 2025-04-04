@@ -1,71 +1,90 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Julia SFTP Client · Julia SFTPClient Documentation </title><meta name="title" content="Julia SFTP Client · Julia SFTPClient Documentation "/><meta property="og:title" content="Julia SFTP Client · Julia SFTPClient Documentation "/><meta property="twitter:title" content="Julia SFTP Client · Julia SFTPClient Documentation "/><meta name="description" content="Documentation for Julia SFTPClient Documentation ."/><meta property="og:description" content="Documentation for Julia SFTPClient Documentation ."/><meta property="twitter:description" content="Documentation for Julia SFTPClient Documentation ."/><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="search_index.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href>Julia SFTPClient Documentation </a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Julia SFTP Client</a><ul class="internal"><li><a class="tocitem" href="#SFTPClient-Features"><span>SFTPClient Features</span></a></li><li><a class="tocitem" href="#SFTPClient-Installation"><span>SFTPClient Installation</span></a></li><li><a class="tocitem" href="#SFTPClient-Examples"><span>SFTPClient Examples</span></a></li></ul></li><li><a class="tocitem" href="reference/">SFTPClient API Documentation</a></li><li><a class="tocitem" href="troubleshooting/">Troubleshooting</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Julia SFTP Client</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Julia SFTP Client</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/stensmo/SFTPClient.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/stensmo/SFTPClient.jl/blob/main/docs/src/index.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Julia-SFTP-Client"><a class="docs-heading-anchor" href="#Julia-SFTP-Client">Julia SFTP Client</a><a id="Julia-SFTP-Client-1"></a><a class="docs-heading-anchor-permalink" href="#Julia-SFTP-Client" title="Permalink"></a></h1><p><em>An SFTP Client for Julia.</em></p><p>A julia package for communicating with SFTP Servers, supporting username and password, or certificate authentication. </p><h2 id="SFTPClient-Features"><a class="docs-heading-anchor" href="#SFTPClient-Features">SFTPClient Features</a><a id="SFTPClient-Features-1"></a><a class="docs-heading-anchor-permalink" href="#SFTPClient-Features" title="Permalink"></a></h2><pre><code class="nohighlight hljs">- readdir
-- download
-- upload 
-- cd
-- walkdir
-- rm 
-- rmdir
-- mkdir
-- mv
-- sftpstat (like stat, but more limited)</code></pre><h2 id="SFTPClient-Installation"><a class="docs-heading-anchor" href="#SFTPClient-Installation">SFTPClient Installation</a><a id="SFTPClient-Installation-1"></a><a class="docs-heading-anchor-permalink" href="#SFTPClient-Installation" title="Permalink"></a></h2><p>Install by running:</p><p>import Pkg;Pkg.add(&quot;SFTPClient&quot;)</p><h2 id="SFTPClient-Examples"><a class="docs-heading-anchor" href="#SFTPClient-Examples">SFTPClient Examples</a><a id="SFTPClient-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#SFTPClient-Examples" title="Permalink"></a></h2><p>Examples:</p><pre><code class="nohighlight hljs">using SFTPClient
-
-# Replace with your actual credentials
-  username = &quot;demo&quot;
-  password = &quot;password&quot;
-  url = &quot;sftp://test.rebex.net/pub/example/&quot;
-
-  file_name = &quot;readme.txt&quot;
-
-  sftp = SFTP(url, username, password)
-
-try
-    SFTPClient.download(sftp, file_name;downloadDir=&quot;.&quot;)
-    println(&quot;File downloaded successfully! $(file_name)&quot;)
-catch e
-    println(&quot;Error downloading file: &quot;, e)
-end
-</code></pre><pre><code class="nohighlight hljs">
-    using SFTPClient
-    sftp = SFTP(&quot;sftp://test.rebex.net/pub/example/&quot;, &quot;demo&quot;, &quot;password&quot;)
-    files=readdir(sftp)
-    # On Windows, replace this with an appropriate path
-    downloadDir=&quot;/tmp/&quot;
-    SFTPClient.download.(sftp, files, downloadDir=downloadDir)
-
-    statStructs = sftpstat(sftp)
-</code></pre><pre><code class="nohighlight hljs">    #You can also use it like this
-    df=DataFrame(CSV.File(SFTPClient.download(sftp, &quot;/mydir/test.csv&quot;)))
-    # For certificates you can use this for setting it up
-    sftp = SFTP(&quot;sftp://mysitewhereIhaveACertificate.com&quot;, &quot;myuser&quot;)
-    # Since 0.3.8 you can also do this
-    sftp = SFTP(&quot;sftp://mysitewhereIhaveACertificate.com&quot;, &quot;myuser&quot;, &quot;cert.pub&quot;, &quot;cert.pem&quot;) # Assumes cert.pub and cert.pem is in your current path
-    # The cert.pem is your certificate (private key), and the cert.pub can be obtained from the private key.
-    # ssh-keygen -y  -f ./cert.pem. Save the output into &quot;cert.pub&quot;. 
-</code></pre><p>Full example for working with JSON</p><pre><code class="nohighlight hljs">using SFTPClient
-using DataFrames
-using JSON
-
-# Replace with your actual credentials
-  username = &quot;username&quot;
-  password = &quot;password&quot;
-  url = &quot;sftp://myserver/directory/&quot;
-
-  file_name = &quot;wheat.json&quot;
-
-  sftp = SFTP(url, username, password)
-
-  try
-        SFTPClient.download(sftp, file_name;downloadDir=&quot;.&quot;)
-        println(&quot;File downloaded successfully!&quot;)
-  catch e
-        println(&quot;Error downloading file: &quot;, e)
-  end
-
-  data = JSON.parsefile(file_name;  null=missing, inttype=Float64)
-
-  # Convert JSON to DataFrame. The Tables.dictrowtable is necessary for any data which does not have fields for all data. 
-  wheatDF = DataFrame(Tables.dictrowtable(data))
-
-
-</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="reference/">SFTPClient API Documentation »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.10.1 on <span class="colophon-date" title="Friday 4 April 2025 12:56">Friday 4 April 2025</span>. Using Julia version 1.11.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Julia SFTP Client | Julia SFTPClient Documentation</title>
+    <meta name="description" content="Documentation for SFTPClient.jl">
+    <meta name="generator" content="VitePress v1.6.3">
+    <link rel="preload stylesheet" href="/SFTPClient.jl/dev/assets/style.CelLVBK9.css" as="style">
+    <link rel="preload stylesheet" href="/SFTPClient.jl/dev/vp-icons.css" as="style">
+    
+    <script type="module" src="/SFTPClient.jl/dev/assets/app.COXT4oms.js"></script>
+    <link rel="preload" href="/SFTPClient.jl/dev/assets/inter-roman-latin.Di8DUHzh.woff2" as="font" type="font/woff2" crossorigin="">
+    <link rel="modulepreload" href="/SFTPClient.jl/dev/assets/chunks/theme.nRsWnc7l.js">
+    <link rel="modulepreload" href="/SFTPClient.jl/dev/assets/chunks/framework.CAC67dkV.js">
+    <link rel="modulepreload" href="/SFTPClient.jl/dev/assets/index.md.Mpbj_Oc2.lean.js">
+    <script src="/SFTPClient.jl/versions.js"></script>
+    <script src="/SFTPClient.jl/dev/siteinfo.js"></script>
+    <script id="check-dark-mode">(()=>{const e=localStorage.getItem("vitepress-theme-appearance")||"auto",a=window.matchMedia("(prefers-color-scheme: dark)").matches;(!e||e==="auto"?a:e==="dark")&&document.documentElement.classList.add("dark")})();</script>
+    <script id="check-mac-os">document.documentElement.classList.toggle("mac",/Mac|iPhone|iPod|iPad/i.test(navigator.platform));</script>
+  </head>
+  <body>
+    <div id="app"><div class="Layout" data-v-a9a9e638><!--[--><!--]--><!--[--><span tabindex="-1" data-v-492508fc></span><a href="#VPContent" class="VPSkipLink visually-hidden" data-v-492508fc>Skip to content</a><!--]--><!----><header class="VPNav" data-v-a9a9e638 data-v-f1e365da><div class="VPNavBar" data-v-f1e365da data-v-822684d1><div class="wrapper" data-v-822684d1><div class="container" data-v-822684d1><div class="title" data-v-822684d1><div class="VPNavBarTitle" data-v-822684d1 data-v-0f4f798b><a class="title" href="/SFTPClient.jl/dev/" data-v-0f4f798b><!--[--><!--]--><!----><span data-v-0f4f798b>Julia SFTPClient Documentation</span><!--[--><!--]--></a></div></div><div class="content" data-v-822684d1><div class="content-body" data-v-822684d1><!--[--><!--]--><div class="VPNavBarSearch search" data-v-822684d1><!--[--><!----><div id="local-search"><button type="button" class="DocSearch DocSearch-Button" aria-label="Search"><span class="DocSearch-Button-Container"><span class="vp-icon DocSearch-Search-Icon"></span><span class="DocSearch-Button-Placeholder">Search</span></span><span class="DocSearch-Button-Keys"><kbd class="DocSearch-Button-Key"></kbd><kbd class="DocSearch-Button-Key">K</kbd></span></button></div><!--]--></div><nav aria-labelledby="main-nav-aria-label" class="VPNavBarMenu menu" data-v-822684d1 data-v-e6d46098><span id="main-nav-aria-label" class="visually-hidden" data-v-e6d46098> Main Navigation </span><!--[--><!--[--><!----><!--]--><!--]--></nav><!----><div class="VPNavBarAppearance appearance" data-v-822684d1 data-v-af096f4a><button class="VPSwitch VPSwitchAppearance" type="button" role="switch" title aria-checked="false" data-v-af096f4a data-v-e40a8bb6 data-v-4a1c76db><span class="check" data-v-4a1c76db><span class="icon" data-v-4a1c76db><!--[--><span class="vpi-sun sun" data-v-e40a8bb6></span><span class="vpi-moon moon" data-v-e40a8bb6></span><!--]--></span></span></button></div><div class="VPSocialLinks VPNavBarSocialLinks social-links" data-v-822684d1 data-v-164c457f data-v-ee7a9424><!--[--><a class="VPSocialLink no-icon" href="https://github.com/stensmo/SFTPClient.jl" aria-label="github" target="_blank" rel="noopener" data-v-ee7a9424 data-v-d26d30cb><span class="vpi-social-github"></span></a><!--]--></div><div class="VPFlyout VPNavBarExtra extra" data-v-822684d1 data-v-925effce data-v-04f5c5e9><button type="button" class="button" aria-haspopup="true" aria-expanded="false" aria-label="extra navigation" data-v-04f5c5e9><span class="vpi-more-horizontal icon" data-v-04f5c5e9></span></button><div class="menu" data-v-04f5c5e9><div class="VPMenu" data-v-04f5c5e9 data-v-7dd3104a><!----><!--[--><!--[--><!----><div class="group" data-v-925effce><div class="item appearance" data-v-925effce><p class="label" data-v-925effce>Appearance</p><div class="appearance-action" data-v-925effce><button class="VPSwitch VPSwitchAppearance" type="button" role="switch" title aria-checked="false" data-v-925effce data-v-e40a8bb6 data-v-4a1c76db><span class="check" data-v-4a1c76db><span class="icon" data-v-4a1c76db><!--[--><span class="vpi-sun sun" data-v-e40a8bb6></span><span class="vpi-moon moon" data-v-e40a8bb6></span><!--]--></span></span></button></div></div></div><div class="group" data-v-925effce><div class="item social-links" data-v-925effce><div class="VPSocialLinks social-links-list" data-v-925effce data-v-ee7a9424><!--[--><a class="VPSocialLink no-icon" href="https://github.com/stensmo/SFTPClient.jl" aria-label="github" target="_blank" rel="noopener" data-v-ee7a9424 data-v-d26d30cb><span class="vpi-social-github"></span></a><!--]--></div></div></div><!--]--><!--]--></div></div></div><!--[--><!--[--><!--[--><div class="VPFlyout VPNolebaseEnhancedReadabilitiesMenu VPNolebaseEnhancedReadabilitiesMenuFlyout" aria-label="Enhanced Readability" role="menuitem" data-v-04f5c5e9><button type="button" class="button" aria-haspopup="true" aria-expanded="false" data-v-04f5c5e9><span class="text" data-v-04f5c5e9><span class="i-icon-park-outline:book-open option-icon" data-v-04f5c5e9></span><!----><span class="vpi-chevron-down text-icon" data-v-04f5c5e9></span></span></button><div class="menu" data-v-04f5c5e9><div class="VPMenu" data-v-04f5c5e9 data-v-7dd3104a><!----><!--[--><!--]--></div></div></div><!--]--><!--]--><!--]--><button type="button" class="VPNavBarHamburger hamburger" aria-label="mobile navigation" aria-expanded="false" aria-controls="VPNavScreen" data-v-822684d1 data-v-5dea55bf><span class="container" data-v-5dea55bf><span class="top" data-v-5dea55bf></span><span class="middle" data-v-5dea55bf></span><span class="bottom" data-v-5dea55bf></span></span></button></div></div></div></div><div class="divider" data-v-822684d1><div class="divider-line" data-v-822684d1></div></div></div><!----></header><div class="VPLocalNav empty fixed" data-v-a9a9e638 data-v-070ab83d><div class="container" data-v-070ab83d><!----><div class="VPLocalNavOutlineDropdown" style="--vp-vh:0px;" data-v-070ab83d data-v-168ddf5d><button data-v-168ddf5d>Return to top</button><!----></div></div></div><!----><div class="VPContent" id="VPContent" data-v-a9a9e638 data-v-91765379><div class="VPDoc has-aside" data-v-91765379 data-v-83890dd9><!--[--><!--]--><div class="container" data-v-83890dd9><div class="aside" data-v-83890dd9><div class="aside-curtain" data-v-83890dd9></div><div class="aside-container" data-v-83890dd9><div class="aside-content" data-v-83890dd9><div class="VPDocAside" data-v-83890dd9 data-v-6d7b3c46><!--[--><!--]--><!--[--><!--]--><nav aria-labelledby="doc-outline-aria-label" class="VPDocAsideOutline" data-v-6d7b3c46 data-v-b38bf2ff><div class="content" data-v-b38bf2ff><div class="outline-marker" data-v-b38bf2ff></div><div aria-level="2" class="outline-title" id="doc-outline-aria-label" role="heading" data-v-b38bf2ff>On this page</div><ul class="VPDocOutlineItem root" data-v-b38bf2ff data-v-3f927ebe><!--[--><!--]--></ul></div></nav><!--[--><!--]--><div class="spacer" data-v-6d7b3c46></div><!--[--><!--]--><!----><!--[--><!--]--><!--[--><!--]--></div></div></div></div><div class="content" data-v-83890dd9><div class="content-container" data-v-83890dd9><!--[--><!--]--><main class="main" data-v-83890dd9><div style="position:relative;" class="vp-doc _SFTPClient_jl_dev_" data-v-83890dd9><div><h1 id="Julia-SFTP-Client" tabindex="-1">Julia SFTP Client <a class="header-anchor" href="#Julia-SFTP-Client" aria-label="Permalink to &quot;Julia SFTP Client {#Julia-SFTP-Client}&quot;">​</a></h1><p><em>An SFTP Client for Julia.</em></p><p>A julia package for communicating with SFTP Servers, supporting username and password, or certificate authentication.</p><h2 id="SFTPClient-Features" tabindex="-1">SFTPClient Features <a class="header-anchor" href="#SFTPClient-Features" aria-label="Permalink to &quot;SFTPClient Features {#SFTPClient-Features}&quot;">​</a></h2><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>- readdir</span></span>
+<span class="line"><span>- download</span></span>
+<span class="line"><span>- upload </span></span>
+<span class="line"><span>- cd</span></span>
+<span class="line"><span>- walkdir</span></span>
+<span class="line"><span>- rm </span></span>
+<span class="line"><span>- rmdir</span></span>
+<span class="line"><span>- mkdir</span></span>
+<span class="line"><span>- mv</span></span>
+<span class="line"><span>- sftpstat (like stat, but more limited)</span></span></code></pre></div><h2 id="SFTPClient-Installation" tabindex="-1">SFTPClient Installation <a class="header-anchor" href="#SFTPClient-Installation" aria-label="Permalink to &quot;SFTPClient Installation {#SFTPClient-Installation}&quot;">​</a></h2><p>Install by running:</p><p>import Pkg;Pkg.add(&quot;SFTPClient&quot;)</p><h2 id="SFTPClient-Examples" tabindex="-1">SFTPClient Examples <a class="header-anchor" href="#SFTPClient-Examples" aria-label="Permalink to &quot;SFTPClient Examples {#SFTPClient-Examples}&quot;">​</a></h2><p>Examples:</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>using SFTPClient</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># Replace with your actual credentials</span></span>
+<span class="line"><span>  username = &quot;demo&quot;</span></span>
+<span class="line"><span>  password = &quot;password&quot;</span></span>
+<span class="line"><span>  url = &quot;sftp://test.rebex.net/pub/example/&quot;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  file_name = &quot;readme.txt&quot;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  sftp = SFTP(url, username, password)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>try</span></span>
+<span class="line"><span>    SFTPClient.download(sftp, file_name;downloadDir=&quot;.&quot;)</span></span>
+<span class="line"><span>    println(&quot;File downloaded successfully! $(file_name)&quot;)</span></span>
+<span class="line"><span>catch e</span></span>
+<span class="line"><span>    println(&quot;Error downloading file: &quot;, e)</span></span>
+<span class="line"><span>end</span></span></code></pre></div><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span></span></span>
+<span class="line"><span>    using SFTPClient</span></span>
+<span class="line"><span>    sftp = SFTP(&quot;sftp://test.rebex.net/pub/example/&quot;, &quot;demo&quot;, &quot;password&quot;)</span></span>
+<span class="line"><span>    files=readdir(sftp)</span></span>
+<span class="line"><span>    # On Windows, replace this with an appropriate path</span></span>
+<span class="line"><span>    downloadDir=&quot;/tmp/&quot;</span></span>
+<span class="line"><span>    SFTPClient.download.(sftp, files, downloadDir=downloadDir)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>    statStructs = sftpstat(sftp)</span></span></code></pre></div><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>    #You can also use it like this</span></span>
+<span class="line"><span>    df=DataFrame(CSV.File(SFTPClient.download(sftp, &quot;/mydir/test.csv&quot;)))</span></span>
+<span class="line"><span>    # For certificates you can use this for setting it up</span></span>
+<span class="line"><span>    sftp = SFTP(&quot;sftp://mysitewhereIhaveACertificate.com&quot;, &quot;myuser&quot;)</span></span>
+<span class="line"><span>    # Since 0.3.8 you can also do this</span></span>
+<span class="line"><span>    sftp = SFTP(&quot;sftp://mysitewhereIhaveACertificate.com&quot;, &quot;myuser&quot;, &quot;cert.pub&quot;, &quot;cert.pem&quot;) # Assumes cert.pub and cert.pem is in your current path</span></span>
+<span class="line"><span>    # The cert.pem is your certificate (private key), and the cert.pub can be obtained from the private key.</span></span>
+<span class="line"><span>    # ssh-keygen -y  -f ./cert.pem. Save the output into &quot;cert.pub&quot;.</span></span></code></pre></div><p>Full example for working with JSON</p><div class="language- vp-adaptive-theme"><button title="Copy Code" class="copy"></button><span class="lang"></span><pre class="shiki shiki-themes github-light github-dark vp-code" tabindex="0"><code><span class="line"><span>using SFTPClient</span></span>
+<span class="line"><span>using DataFrames</span></span>
+<span class="line"><span>using JSON</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span># Replace with your actual credentials</span></span>
+<span class="line"><span>  username = &quot;username&quot;</span></span>
+<span class="line"><span>  password = &quot;password&quot;</span></span>
+<span class="line"><span>  url = &quot;sftp://myserver/directory/&quot;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  file_name = &quot;wheat.json&quot;</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  sftp = SFTP(url, username, password)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  try</span></span>
+<span class="line"><span>        SFTPClient.download(sftp, file_name;downloadDir=&quot;.&quot;)</span></span>
+<span class="line"><span>        println(&quot;File downloaded successfully!&quot;)</span></span>
+<span class="line"><span>  catch e</span></span>
+<span class="line"><span>        println(&quot;Error downloading file: &quot;, e)</span></span>
+<span class="line"><span>  end</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  data = JSON.parsefile(file_name;  null=missing, inttype=Float64)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  # Convert JSON to DataFrame. The Tables.dictrowtable is necessary for any data which does not have fields for all data. </span></span>
+<span class="line"><span>  wheatDF = DataFrame(Tables.dictrowtable(data))</span></span></code></pre></div></div></div></main><footer class="VPDocFooter" data-v-83890dd9 data-v-4f9813fa><!--[--><!--]--><div class="edit-info" data-v-4f9813fa><div class="edit-link" data-v-4f9813fa><a class="VPLink link vp-external-link-icon no-icon edit-link-button" href="https://github.com/stensmo/SFTPClient.jl/edit/main/docs/src/index.md" target="_blank" rel="noreferrer" data-v-4f9813fa><!--[--><span class="vpi-square-pen edit-link-icon" data-v-4f9813fa></span> Edit this page<!--]--></a></div><!----></div><!----></footer><!--[--><!--]--></div></div></div><!--[--><!--]--></div></div><footer class="VPFooter" data-v-a9a9e638 data-v-c970a860><div class="container" data-v-c970a860><p class="message" data-v-c970a860>Made with <a href="https://luxdl.github.io/DocumenterVitepress.jl/dev/" target="_blank"><strong>DocumenterVitepress.jl</strong></a><br></p><p class="copyright" data-v-c970a860>© Copyright 2025.</p></div></footer><!--[--><!--]--></div></div>
+    <script>window.__VP_HASH_MAP__=JSON.parse("{\"index.md\":\"Mpbj_Oc2\",\"reference.md\":\"B65ue4cU\",\"troubleshooting.md\":\"BKl1uHid\"}");window.__VP_SITE_DATA__=JSON.parse("{\"lang\":\"en-US\",\"dir\":\"ltr\",\"title\":\"Julia SFTPClient Documentation\",\"description\":\"Documentation for SFTPClient.jl\",\"base\":\"/SFTPClient.jl/dev/\",\"head\":[],\"router\":{\"prefetchLinks\":true},\"appearance\":true,\"themeConfig\":{\"outline\":\"deep\",\"search\":{\"provider\":\"local\",\"options\":{\"detailedView\":true}},\"nav\":[{\"component\":\"VersionPicker\"}],\"sidebar\":[],\"editLink\":{\"pattern\":\"https://github.com/stensmo/SFTPClient.jl/edit/main/docs/src/:path\"},\"socialLinks\":[{\"icon\":\"github\",\"link\":\"https://github.com/stensmo/SFTPClient.jl\"}],\"footer\":{\"message\":\"Made with <a href=\\\"https://luxdl.github.io/DocumenterVitepress.jl/dev/\\\" target=\\\"_blank\\\"><strong>DocumenterVitepress.jl</strong></a><br>\",\"copyright\":\"© Copyright 2025.\"}},\"locales\":{},\"scrollOffset\":134,\"cleanUrls\":true}");</script>
+    
+  </body>
+</html>
