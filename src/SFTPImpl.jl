@@ -631,8 +631,7 @@ function download(
      end
 
      if downloadDir != nothing
-
-        output = joinpath(downloadDir, file_name)
+        output = joinpath(abspath(downloadDir), file_name)
      end
 
      
@@ -640,8 +639,8 @@ function download(
 
 
     try
-   
-        output = Downloads.download(string(uri), output; sftp.downloader)
+    
+       output = Downloads.download(string(uri), output; sftp.downloader)
 
     catch e
    

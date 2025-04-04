@@ -7,6 +7,28 @@ The following methods are supported: readdir, download, upload, cd, rm, rmdir, m
  
 
 Examples:
+
+```
+using SFTPClient
+
+# Replace with your actual credentials
+  username = "demo"
+  password = "password"
+  url = "sftp://test.rebex.net/pub/example/"
+
+  file_name = "readme.txt"
+
+  sftp = SFTP(url, username, password)
+
+try
+    SFTPClient.download(sftp, file_name;downloadDir=".")
+    println("File downloaded successfully! $(file_name)")
+catch e
+    println("Error downloading file: ", e)
+end
+
+```
+
 ```
 
     using SFTPClient
@@ -37,11 +59,30 @@ Examples:
 Full example for working with JSON
 
 ```
+using SFTPClient
+using DataFrames
+using JSON
 
+# Replace with your actual credentials
+  username = "username"
+  password = "password"
+  url = "sftp://myserver/directory/"
 
+  file_name = "wheat.json"
 
+  sftp = SFTP(url, username, password)
 
+  try
+        SFTPClient.download(sftp, file_name;downloadDir=".")
+        println("File downloaded successfully!")
+  catch e
+        println("Error downloading file: ", e)
+  end
 
+  data = JSON.parsefile(file_name;  null=missing, inttype=Float64)
+
+  # Convert JSON to DataFrame. The Tables.dictrowtable is necessary for any data which does not have fields for all data. 
+  wheatDF = DataFrame(Tables.dictrowtable(data))
 
 
 
