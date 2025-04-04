@@ -34,6 +34,21 @@ Examples:
 
 ```
 
+Full example for working with JSON
+
+```
+
+
+
+
+
+
+
+
+```
+
+
+
 [API Documentation](https://stensmo.github.io/SFTPClient.jl/stable/reference/)
 
 

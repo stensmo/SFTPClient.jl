@@ -28,13 +28,6 @@ struct SFTPStatStruct
     mtime   :: Float64
 end
 
-if Sys.iswindows()
-    const fileSeparator = "\\"
-else
-    const fileSeparator = "/"
-end
-
-
 function check_and_create_fingerprint(hostNameOrIP::AbstractString)
     dir = homedir()
 
@@ -638,15 +631,8 @@ function download(
      end
 
      if downloadDir != nothing
-        if !isdirpath(downloadDir)
-            downloadDir = downloadDir * fileSeparator
-        end
 
-        if downloadDir == "."
-            downloadDir = downloadDir * fileSeparator
-        end
-
-        output = downloadDir * file_name
+        output = joinpath(downloadDir, file_name)
      end
 
      
