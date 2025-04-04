@@ -8,7 +8,7 @@ The following methods are supported: readdir, download, upload, cd, rm, rmdir, m
 
 Examples:
 
-```
+```julia
 using SFTPClient
 
 # Replace with your actual credentials
@@ -28,8 +28,9 @@ catch e
 end
 
 ```
+Another example for downloading multiple files
 
-```
+```julia
 
     using SFTPClient
     sftp = SFTP("sftp://test.rebex.net/pub/example/", "demo", "password")
@@ -42,9 +43,9 @@ end
 
 ```
    
-  
+Directly download CSV files and load into a dataframe, or use certificates
     
-```
+```julia
     #You can also use it like this
     df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
     # For certificates you can use this for setting it up
@@ -58,7 +59,7 @@ end
 
 Full example for working with JSON
 
-```
+```julia
 using SFTPClient
 using DataFrames
 using JSON
