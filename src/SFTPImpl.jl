@@ -103,7 +103,7 @@ function create_fingerprint(hostNameOrIP::AbstractString)
 end
 
 """
-SFTP(url::AbstractString, username::AbstractString, public_key_file::AbstractString, private_key_file::AbstractString;disable_verify_peer=false, disable_verify_host=false, verbose=false)
+    SFTP(url::AbstractString, username::AbstractString, public_key_file::AbstractString, private_key_file::AbstractString;disable_verify_peer=false, disable_verify_host=false, verbose=false)
 
  Creates a new SFTP client using certificate authentication, and keys in the files specified
 
@@ -126,7 +126,7 @@ end
 
 
 """
- SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+    SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
  
  Creates a new SFTP client using certificate authentication. 
 
@@ -156,7 +156,7 @@ function SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=
 end
 
 """
- SFTP(url::AbstractString, username::AbstractString, password::AbstractString;create_known_hosts_entry=true, disable_verify_peer=false, disable_verify_host=false)
+    SFTP(url::AbstractString, username::AbstractString, password::AbstractString;create_known_hosts_entry=true, disable_verify_peer=false, disable_verify_host=false)
 
 Creates a new SFTP Client:
 url: The url to connect to, e.g., sftp://mysite.com
@@ -411,21 +411,21 @@ Base.islink(st::SFTPStatStruct) = filemode(st) & 0xf000 == 0xa000
 
 
 """
-Base.isdir(st::SFTPStatStruct) 
+    Base.isdir(st::SFTPStatStruct) 
 
 Test if st is a directory
 """
 Base.isdir(st::SFTPStatStruct) = filemode(st) & 0xf000 == 0x4000
 
 """
-Base.isfile(st::SFTPStatStruct) 
+    Base.isfile(st::SFTPStatStruct) 
 
 Test if st is a file
 """
 Base.isfile(st::SFTPStatStruct) = filemode(st) & 0xf000 == 0x8000
 
 """
-Base.isdir(st::SFTPStatStruct) 
+    Base.isdir(st::SFTPStatStruct) 
 
 Get the filemode of the directory
 """
@@ -508,7 +508,7 @@ function makeStruct(stats::Vector{String})::SFTPStatStruct
 end
 
 """
-sftpstat(sftp::SFTP)
+    sftpstat(sftp::SFTP)
 
 Like Julia stat, but returns a Vector of SFTPStatStructs. Note that you can only run this on directories. Can be used for checking if a file was modified, and much more.
 
@@ -518,7 +518,7 @@ sftpstat(sftp::SFTP) = sftpstat(sftp::SFTP, ".")
 
 
 """
-sftpstat(sftp::SFTP, path::AbstractString)
+    sftpstat(sftp::SFTP, path::AbstractString)
 
 Like Julia stat, but returns a Vector of SFTPStatStructs. Note that you can only run this on directories. Can be used for checking if a file was modified, and much more.
 
@@ -572,7 +572,7 @@ end
 
 
 """
-upload(sftp::SFTP, file_name::AbstractString)
+    upload(sftp::SFTP, file_name::AbstractString)
 
 Upload (put) a file to the server. Broadcasting can be used too. 
 
@@ -600,7 +600,7 @@ end
 
 
 """
-SFTPClient.download(
+    SFTPClient.download(
     sftp::SFTP,
     file_name::AbstractString,
      output = tempname();downloadDir::Union{String, Nothing}=nothing)
@@ -650,7 +650,7 @@ function download(
 end
 
 """
-readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)
+    readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)
 
 Reads the current directory. Returns a vector of Strings just like the regular readdir function.
 
@@ -763,11 +763,11 @@ function Base.mkdir(sftp::SFTP, dir::AbstractString)
 end
 
 """
-mv(
+    mv(
     sftp::SFTP,
     old_name::AbstractString,
     new_name::AbstractString
-)
+    )
 
 Move, i.e., rename the file. 
 

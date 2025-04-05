@@ -2,6 +2,5 @@
 
 ```@autodocs
 Modules = [SFTPClient]
-Order   = [:function, :type]
 Private = false
 ```
