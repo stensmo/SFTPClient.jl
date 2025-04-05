@@ -6,7 +6,7 @@ layout: home
 hero:
   name: "SFTPClient.jl"
   text: "SFTP in Julia"
-  tagline: A Markdown backend designed to work with VitePress and Documenter.jl
+  tagline: Julia SFTP client, supporting username and password, or certificate authentication.
   image:
     src: /logo.png
     alt: Julia SFTP Client
@@ -16,7 +16,7 @@ hero:
       link: /manual/get_started
     - theme: alt
       text: View on Github
-      link: https://github.com/LuxDL/DocumenterVitepress.jl
+      link: https://github.com/stensmo/SFTPClient.jl
     - theme: alt
       text: API
       link: /api

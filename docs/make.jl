@@ -10,7 +10,7 @@ pages = [
 
 
 makedocs(; 
-    sitename = "Julia SFTPClient Documentation", 
+    sitename = "Julia SFTP Client Documentation", 
     authors = "Erik Stensmo",
     modules = [SFTPClient],
     warnonly = true,
