@@ -3,7 +3,7 @@ using Documenter, DocumenterVitepress
 
 
 pages = [
-    "SFTPClient.jl" => "index.md",
+    "Home" => "index.md",
     "API" => "api.md",
     "Troubleshooting" => "troubleshooting.md",
 ]

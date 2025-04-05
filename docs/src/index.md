@@ -11,9 +11,6 @@ hero:
     src: /logo.png
     alt: Julia SFTP Client
   actions:
-    - theme: brand
-      text: Get Started
-      link: /manual/get_started
     - theme: alt
       text: View on Github
       link: https://github.com/stensmo/SFTPClient.jl
@@ -24,33 +21,19 @@ hero:
 
 features:
   - icon: <img width="64" height="64" src="https://img.icons8.com/arcade/64/markdown.png" alt="markdown"/>
-    title: Markdown
-    details: Write in standard markdown syntax
-    link: /markdown-examples
-  - icon: <img width="64" height="64" src="https://fredrikekre.github.io/Literate.jl/v2/assets/logo.png" />
-    title: Literate.jl
-    details: Parse scripts into markdown via Literate.jl
-    link: https://github.com/fredrikekre/Literate.jl
+    title: Complete set of operations
+    details: download, upload, remove files, walk directories
+    link: /api
+
+  - icon: <img width="64" height="64" src="https://img.icons8.com/arcade/64/markdown.png" alt="markdown"/>
+    title: Authentication
+    details: Username and password, as well as certificate authentication
+    link: /api
 
 ---
 ``` 
 
-*An SFTP Client for Julia.*
 
-A julia package for communicating with SFTP Servers, supporting username and password, or certificate authentication. 
-
-## SFTPClient Features
-
-    - readdir
-    - download
-    - upload 
-    - cd
-    - walkdir
-    - rm 
-    - rmdir
-    - mkdir
-    - mv
-    - sftpstat (like stat, but more limited)
 ## SFTPClient Installation
 
 Install by running:
