@@ -766,7 +766,7 @@ end
 mv(
     sftp::SFTP,
     old_name::AbstractString,
-    new_name::AbstractString;
+    new_name::AbstractString
 )
 
 Move, i.e., rename the file. 
@@ -775,7 +775,7 @@ Move, i.e., rename the file.
 function Base.mv(
     sftp::SFTP,
     old_name::AbstractString,
-    new_name::AbstractString;
+    new_name::AbstractString
 )
     resp = ftp_command(sftp, "rename $(handleRelativePath(old_name, sftp)) $(handleRelativePath(new_name, sftp))")
     return nothing

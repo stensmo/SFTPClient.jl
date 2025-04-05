@@ -1,20 +1,7 @@
-```@raw html
----
-outline: deep
----
-```
-
-## Public API
-
-```@meta
-DocTestSetup = quote
-using DocumenterVitepress
-end
-```
+# SFTPClient API Documentation
 
 ```@autodocs
-Modules = [DocumenterVitepress]
+Modules = [SFTPClient]
+Order   = [:function, :type]
 Private = false
 ```
-
-See e.g. [`DocumenterVitepress.DocumenterVitepress`](@ref)

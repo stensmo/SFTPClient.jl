@@ -19,8 +19,9 @@ A julia package for communicating with SFTP Servers, supporting username and pas
 ## SFTPClient Installation
 
 Install by running:
-
+```julia
 import Pkg;Pkg.add("SFTPClient")
+```
 
 ## SFTPClient Examples
 
