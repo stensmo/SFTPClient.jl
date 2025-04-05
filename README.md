@@ -91,7 +91,7 @@ using JSON
 
 
 
-[API Documentation](https://stensmo.github.io/SFTPClient.jl/stable/api/)
+[API Documentation](https://stensmo.github.io/SFTPClient.jl/stable/api)
 
 
 
