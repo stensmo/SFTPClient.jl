@@ -1,4 +1,4 @@
-const REPO = "LuxDL/DocumenterVitepress.jl";
+const REPO = "stensmo/SFTPClient.jl";
 
 export default {
   async load() {

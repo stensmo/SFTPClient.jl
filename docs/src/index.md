@@ -20,12 +20,12 @@ hero:
 
 
 features:
-  - icon: <img width="64" height="64" src="https://img.icons8.com/arcade/64/markdown.png" alt="markdown"/>
+  - icon: <img width="64" height="64" src="https://stensmo.github.io/SFTPClient.jl/stable/logo.png" alt="Feature complete"/>
     title: Complete set of operations
     details: download, upload, remove files, walk directories
     link: /api
 
-  - icon: <img width="64" height="64" src="https://img.icons8.com/arcade/64/markdown.png" alt="markdown"/>
+  - icon: <img width="64" height="64" src="https://stensmo.github.io/SFTPClient.jl/stable/logo.png" alt="Authentication"/>
     title: Authentication
     details: Username and password, as well as certificate authentication
     link: /api
