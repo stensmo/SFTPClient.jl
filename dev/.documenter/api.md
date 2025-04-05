@@ -1,6 +1,73 @@
 
 # SFTPClient API Documentation {#SFTPClient-API-Documentation}
 <details class='jldocstring custom-block' open>
+<summary><a id='SFTPClient.SFTP-NTuple{4, AbstractString}' href='#SFTPClient.SFTP-NTuple{4, AbstractString}'><span class="jlbinding">SFTPClient.SFTP</span></a> <Badge type="info" class="jlObjectType jlMethod" text="Method" /></summary>
+
+
+
+```julia
+SFTP(url::AbstractString, username::AbstractString, public_key_file::AbstractString, private_key_file::AbstractString;disable_verify_peer=false, disable_verify_host=false, verbose=false)
+```
+
+
+Creates a new SFTP client using certificate authentication, and keys in the files specified
+
+sftp = SFTP(&quot;sftp://mysitewhereIhaveACertificate.com&quot;, &quot;myuser&quot;, &quot;test.pub&quot;, &quot;test.pem&quot;)
+
+
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L105-L113" target="_blank" rel="noreferrer">source</a></Badge>
+
+</details>
+
+<details class='jldocstring custom-block' open>
+<summary><a id='SFTPClient.SFTP-Tuple{AbstractString, AbstractString, AbstractString}' href='#SFTPClient.SFTP-Tuple{AbstractString, AbstractString, AbstractString}'><span class="jlbinding">SFTPClient.SFTP</span></a> <Badge type="info" class="jlObjectType jlMethod" text="Method" /></summary>
+
+
+
+```julia
+SFTP(url::AbstractString, username::AbstractString, password::AbstractString;create_known_hosts_entry=true, disable_verify_peer=false, disable_verify_host=false)
+```
+
+
+Creates a new SFTP Client: url: The url to connect to, e.g., sftp://mysite.com username: The username to use password: The users password create_known_hosts_entry: Automatically create an entry in known hosts
+
+Example: sftp = SFTP(&quot;sftp://test.rebex.net&quot;, &quot;demo&quot;, &quot;password&quot;)
+
+
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L158-L172" target="_blank" rel="noreferrer">source</a></Badge>
+
+</details>
+
+<details class='jldocstring custom-block' open>
+<summary><a id='SFTPClient.SFTP-Tuple{AbstractString, AbstractString}' href='#SFTPClient.SFTP-Tuple{AbstractString, AbstractString}'><span class="jlbinding">SFTPClient.SFTP</span></a> <Badge type="info" class="jlObjectType jlMethod" text="Method" /></summary>
+
+
+
+```julia
+SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
+```
+
+
+Creates a new SFTP client using certificate authentication. 
+
+sftp = SFTP(&quot;sftp://mysitewhereIhaveACertificate.com&quot;, &quot;myuser&quot;)
+
+Note! You must provide the username for this to work. 
+
+Before using this method, you must set up your certificates in ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub
+
+Of course, the host need to be in the known_hosts file as well. 
+
+Test using your local client first: ssh myuser@mysitewhereIhaveACertificate.com
+
+See other method if you want to use files not in ~/ssh/
+
+
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L128-L145" target="_blank" rel="noreferrer">source</a></Badge>
+
+</details>
+
+<details class='jldocstring custom-block' open>
 <summary><a id='Base.Filesystem.cd-Tuple{SFTP, AbstractString}' href='#Base.Filesystem.cd-Tuple{SFTP, AbstractString}'><span class="jlbinding">Base.Filesystem.cd</span></a> <Badge type="info" class="jlObjectType jlMethod" text="Method" /></summary>
 
 
@@ -13,7 +80,7 @@ Change the directory for the SFTP client.
 
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L699-L704" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L699-L704" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
@@ -22,12 +89,15 @@ Change the directory for the SFTP client.
 
 
 
-Base.isdir(st::SFTPStatStruct) 
+```julia
+Base.isdir(st::SFTPStatStruct)
+```
+
 
 Get the filemode of the directory
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L427-L431" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L427-L431" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
@@ -36,12 +106,15 @@ Get the filemode of the directory
 
 
 
-Base.isdir(st::SFTPStatStruct) 
+```julia
+Base.isdir(st::SFTPStatStruct)
+```
+
 
 Test if st is a directory
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L413-L417" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L413-L417" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
@@ -50,12 +123,15 @@ Test if st is a directory
 
 
 
-Base.isfile(st::SFTPStatStruct) 
+```julia
+Base.isfile(st::SFTPStatStruct)
+```
+
 
 Test if st is a file
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L420-L424" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L420-L424" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
@@ -72,7 +148,7 @@ Create a directory
 
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L752-L758" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L752-L758" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
@@ -81,12 +157,19 @@ Create a directory
 
 
 
-mv(     sftp::SFTP,     old_name::AbstractString,     new_name::AbstractString )
+```julia
+mv(
+sftp::SFTP,
+old_name::AbstractString,
+new_name::AbstractString
+)
+```
+
 
 Move, i.e., rename the file. 
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L765-L774" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L765-L774" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
@@ -95,12 +178,15 @@ Move, i.e., rename the file.
 
 
 
+```julia
 readdir(sftp::SFTP, join::Bool = false, sort::Bool = true)
+```
+
 
 Reads the current directory. Returns a vector of Strings just like the regular readdir function.
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L652-L657" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L652-L657" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
@@ -117,7 +203,7 @@ Remove (delete) the file
 
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L731-L736" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L731-L736" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
@@ -126,9 +212,12 @@ Remove (delete) the file
 
 
 
-SFTPClient.download(     sftp::SFTP,     file_name::AbstractString,      output = tempname();downloadDir::Union{String, Nothing}=nothing)
+```julia
+SFTPClient.download(
+sftp::SFTP,
+file_name::AbstractString,
+ output = tempname();downloadDir::Union{String, Nothing}=nothing)
 
-```
  Download a file. You can download it and use it directly, or save it to a file. 
  Specify downloadDir if you want to save downloaded files. You can also use broadcasting.
 Example:
@@ -144,7 +233,7 @@ df=DataFrame(CSV.File(SFTPClient.download(sftp, "/mydir/test.csv")))
 
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L602-L622" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L602-L622" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
@@ -161,7 +250,7 @@ Remove (delete) the directory
 
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L742-L746" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L742-L746" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
@@ -170,12 +259,15 @@ Remove (delete) the directory
 
 
 
+```julia
 sftpstat(sftp::SFTP, path::AbstractString)
+```
+
 
 Like Julia stat, but returns a Vector of SFTPStatStructs. Note that you can only run this on directories. Can be used for checking if a file was modified, and much more.
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L520-L525" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L520-L525" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
@@ -184,14 +276,17 @@ Like Julia stat, but returns a Vector of SFTPStatStructs. Note that you can only
 
 
 
+```julia
 upload(sftp::SFTP, file_name::AbstractString)
+```
+
 
 Upload (put) a file to the server. Broadcasting can be used too. 
 
 files=readdir() upload.(sftp,files)
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L574-L582" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L574-L582" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
@@ -223,65 +318,7 @@ end
 
 
 
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L309-L329" target="_blank" rel="noreferrer">source</a></Badge>
-
-</details>
-
-<details class='jldocstring custom-block' open>
-<summary><a id='SFTPClient.SFTP-NTuple{4, AbstractString}' href='#SFTPClient.SFTP-NTuple{4, AbstractString}'><span class="jlbinding">SFTPClient.SFTP</span></a> <Badge type="info" class="jlObjectType jlMethod" text="Method" /></summary>
-
-
-
-SFTP(url::AbstractString, username::AbstractString, public_key_file::AbstractString, private_key_file::AbstractString;disable_verify_peer=false, disable_verify_host=false, verbose=false)
-
-Creates a new SFTP client using certificate authentication, and keys in the files specified
-
-sftp = SFTP(&quot;sftp://mysitewhereIhaveACertificate.com&quot;, &quot;myuser&quot;, &quot;test.pub&quot;, &quot;test.pem&quot;)
-
-
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L105-L113" target="_blank" rel="noreferrer">source</a></Badge>
-
-</details>
-
-<details class='jldocstring custom-block' open>
-<summary><a id='SFTPClient.SFTP-Tuple{AbstractString, AbstractString, AbstractString}' href='#SFTPClient.SFTP-Tuple{AbstractString, AbstractString, AbstractString}'><span class="jlbinding">SFTPClient.SFTP</span></a> <Badge type="info" class="jlObjectType jlMethod" text="Method" /></summary>
-
-
-
-SFTP(url::AbstractString, username::AbstractString, password::AbstractString;create_known_hosts_entry=true, disable_verify_peer=false, disable_verify_host=false)
-
-Creates a new SFTP Client: url: The url to connect to, e.g., sftp://mysite.com username: The username to use password: The users password create_known_hosts_entry: Automatically create an entry in known hosts
-
-Example: sftp = SFTP(&quot;sftp://test.rebex.net&quot;, &quot;demo&quot;, &quot;password&quot;)
-
-
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L158-L172" target="_blank" rel="noreferrer">source</a></Badge>
-
-</details>
-
-<details class='jldocstring custom-block' open>
-<summary><a id='SFTPClient.SFTP-Tuple{AbstractString, AbstractString}' href='#SFTPClient.SFTP-Tuple{AbstractString, AbstractString}'><span class="jlbinding">SFTPClient.SFTP</span></a> <Badge type="info" class="jlObjectType jlMethod" text="Method" /></summary>
-
-
-
-SFTP(url::AbstractString, username::AbstractString;disable_verify_peer=false, disable_verify_host=false)
-
-Creates a new SFTP client using certificate authentication. 
-
-sftp = SFTP(&quot;sftp://mysitewhereIhaveACertificate.com&quot;, &quot;myuser&quot;)
-
-Note! You must provide the username for this to work. 
-
-Before using this method, you must set up your certificates in ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub
-
-Of course, the host need to be in the known_hosts file as well. 
-
-Test using your local client first: ssh myuser@mysitewhereIhaveACertificate.com
-
-See other method if you want to use files not in ~/ssh/
-
-
-<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/08f2af9a5bd2310c97cc57425effdef755d3a9fe/src/SFTPImpl.jl#L128-L145" target="_blank" rel="noreferrer">source</a></Badge>
+<Badge type="info" class="source-link" text="source"><a href="https://github.com/stensmo/SFTPClient.jl/blob/47d8fbb598a31465b89e8a0a073235ce52ac4463/src/SFTPImpl.jl#L309-L329" target="_blank" rel="noreferrer">source</a></Badge>
 
 </details>
 
