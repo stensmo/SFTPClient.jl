@@ -1,4 +1,39 @@
-# Julia SFTP Client 
+```@raw html
+---
+# https://vitepress.dev/reference/default-theme-home-page
+layout: home
+
+hero:
+  name: "SFTPClient.jl"
+  text: "SFTP in Julia"
+  tagline: A Markdown backend designed to work with VitePress and Documenter.jl
+  image:
+    src: /logo.png
+    alt: Julia SFTP Client
+  actions:
+    - theme: brand
+      text: Get Started
+      link: /manual/get_started
+    - theme: alt
+      text: View on Github
+      link: https://github.com/LuxDL/DocumenterVitepress.jl
+    - theme: alt
+      text: API
+      link: /api
+
+
+features:
+  - icon: <img width="64" height="64" src="https://img.icons8.com/arcade/64/markdown.png" alt="markdown"/>
+    title: Markdown
+    details: Write in standard markdown syntax
+    link: /markdown-examples
+  - icon: <img width="64" height="64" src="https://fredrikekre.github.io/Literate.jl/v2/assets/logo.png" />
+    title: Literate.jl
+    details: Parse scripts into markdown via Literate.jl
+    link: https://github.com/fredrikekre/Literate.jl
+
+---
+``` 
 
 *An SFTP Client for Julia.*
 
