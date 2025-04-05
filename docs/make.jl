@@ -1,6 +1,14 @@
 using SFTPClient
 using Documenter, DocumenterVitepress
 
+
+pages = [
+    "SFTPClient.jl" => "index.md",
+    "API" => "api.md",
+    "Troubleshooting" => "troubleshooting.md",
+]
+
+
 makedocs(; 
     sitename = "Julia SFTPClient Documentation", 
     authors = "Erik Stensmo",
@@ -15,13 +23,7 @@ makedocs(;
     draft = false,
     source = "src",
     build = "build",
-    pages = [
-            "SFTPClient.jl" => "index.md", 
-            
-        ],
-        "api.md",
-    ],
-    plugins = [bib,],
+    pages=pages,
 )
 
 
