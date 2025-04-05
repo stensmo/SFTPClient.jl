@@ -14,15 +14,16 @@ using SFTPClient
 # Replace with your actual credentials
   username = "demo"
   password = "password"
-  url = "sftp://test.rebex.net/pub/example/"
+  server = "sftp://test.rebex.net"
+  directory = "/pub/example/"
 
-  file_name = "readme.txt"
+  filename = "readme.txt"
 
-  sftp = SFTP(url, username, password)
+  sftp = SFTP(server*directory, username, password)
 
 try
-    SFTPClient.download(sftp, file_name;downloadDir=".")
-    println("File downloaded successfully! $(file_name)")
+    SFTPClient.download(sftp, filename;downloadDir=".")
+    println("File downloaded successfully!")
 catch e
     println("Error downloading file: ", e)
 end
