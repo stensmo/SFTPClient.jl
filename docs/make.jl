@@ -17,12 +17,8 @@ makedocs(;
     checkdocs=:all,
     format=DocumenterVitepress.MarkdownVitepress(
         repo = "github.com/stensmo/SFTPClient.jl", # this must be the full URL!
-        devbranch = "master",
-        devurl = "dev";
+ 
     ),
-    draft = false,
-    source = "src",
-    build = "build",
     pages=pages,
 )
 
@@ -30,4 +26,4 @@ makedocs(;
 
    
 
-deploydocs(; repo="github.com/stensmo/SFTPClient.jl", devbranch="main", push_preview=true)
+deploydocs(; repo="github.com/stensmo/SFTPClient.jl")
