@@ -26,4 +26,4 @@ makedocs(;
 
    
 
-deploydocs(; repo="github.com/stensmo/SFTPClient.jl")
+DocumenterVitepress.deploydocs(; repo="github.com/stensmo/SFTPClient.jl")
