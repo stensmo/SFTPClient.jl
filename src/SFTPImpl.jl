@@ -636,9 +636,13 @@ function download(
         output = joinpath(abspath(downloadDir), file_name)
     end
 
+    # Use escapepath (not escapeuri) to preserve '/' in multi-segment paths
+    uri = resolvereference(sftp.uri, escapepath(file_name))
 
-    uri = resolvereference(sftp.uri, escapeuri(file_name))
-
+    # Override easy_hook to remove CURLOPT_DIRLISTONLY (set by reset_easy_hook for readdir)
+    sftp.downloader.easy_hook = (easy, info) -> begin
+        setStandardOptions(sftp, easy, info)
+    end
 
     try
 
@@ -647,6 +651,8 @@ function download(
     catch e
 
         rethrow()
+    finally
+        reset_easy_hook(sftp)
     end
     return output
 end
