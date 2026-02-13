@@ -15,7 +15,33 @@ mutable struct SFTP
     verbose::Bool
     public_key_file::Union{String,Nothing}
     private_key_file::Union{String,Nothing}
+    op_lock::ReentrantLock
 
+end
+
+function SFTP(
+    downloader::Downloader,
+    uri::URI,
+    username::Union{String,Nothing},
+    password::Union{String,Nothing},
+    disable_verify_peer::Bool,
+    disable_verify_host::Bool,
+    verbose::Bool,
+    public_key_file::Union{String,Nothing},
+    private_key_file::Union{String,Nothing}
+)
+    return SFTP(
+        downloader,
+        uri,
+        username,
+        password,
+        disable_verify_peer,
+        disable_verify_host,
+        verbose,
+        public_key_file,
+        private_key_file,
+        ReentrantLock()
+    )
 end
 
 struct SFTPStatStruct
@@ -229,6 +255,15 @@ function setStandardOptions(sftp, easy, info)
 
 end
 
+function with_sftp_lock(f::Function, sftp::SFTP)
+    lock(sftp.op_lock)
+    try
+        return f()
+    finally
+        unlock(sftp.op_lock)
+    end
+end
+
 function reset_easy_hook(sftp::SFTP)
 
     downloader = sftp.downloader
@@ -264,29 +299,31 @@ function handleRelativePath(fileName, sftp::SFTP)
 end
 
 function ftp_command(sftp::SFTP, command::String)
-    slist = Ptr{Cvoid}(0)
+    return with_sftp_lock(sftp) do
+        slist = Ptr{Cvoid}(0)
 
-    slist = curl_slist_append(slist, command)
+        slist = curl_slist_append(slist, command)
 
-    sftp.downloader.easy_hook = (easy, info) -> begin
-        setStandardOptions(sftp, easy, info)
+        sftp.downloader.easy_hook = (easy, info) -> begin
+            setStandardOptions(sftp, easy, info)
 
-        Downloads.Curl.setopt(easy, CURLOPT_QUOTE, slist)
+            Downloads.Curl.setopt(easy, CURLOPT_QUOTE, slist)
+        end
+
+        uri = string(sftp.uri)
+        io = IOBuffer()
+        output = nothing
+
+        try
+            output = Downloads.download(uri, io; sftp.downloader)
+
+        finally
+            curl_slist_free_all(slist)
+            reset_easy_hook(sftp)
+        end
+
+        return output
     end
-
-    uri = string(sftp.uri)
-    io = IOBuffer()
-    output = nothing
-
-    try
-        output = Downloads.download(uri, io; sftp.downloader)
-
-    finally
-        curl_slist_free_all(slist)
-        reset_easy_hook(sftp)
-    end
-
-    return output
 
 end
 
@@ -526,45 +563,45 @@ Like Julia stat, but returns a Vector of SFTPStatStructs. Note that you can only
 
 """
 function sftpstat(sftp::SFTP, path::AbstractString)
+    return with_sftp_lock(sftp) do
+        sftp.downloader.easy_hook = (easy, info) -> begin
+            setStandardOptions(sftp, easy, info)
 
-
-    sftp.downloader.easy_hook = (easy, info) -> begin
-        setStandardOptions(sftp, easy, info)
-
-    end
-
-    output = nothing
-
-    try
-
-        if !isdirpath(path)
-            path = path * "/"
         end
 
-        newUrl = resolvereference(sftp.uri, sftpescapepath(path))
-
-
-        io = IOBuffer()
+        output = nothing
 
         try
-            output = Downloads.download(string(newUrl), io; sftp.downloader)
+
+            if !isdirpath(path)
+                path = path * "/"
+            end
+
+            newUrl = resolvereference(sftp.uri, sftpescapepath(path))
 
 
-        finally
-            reset_easy_hook(sftp)
+            io = IOBuffer()
+
+            try
+                output = Downloads.download(string(newUrl), io; sftp.downloader)
+
+
+            finally
+                reset_easy_hook(sftp)
+            end
+
+
+            # Don't know why this is necessary
+            res = String(take!(io))
+            io2 = IOBuffer(res)
+
+            stats = readlines(io2; keep=false)
+
+            return makeStruct.(parseStat.(stats))
+            #return files
+        catch e
+            rethrow()
         end
-
-
-        # Don't know why this is necessary
-        res = String(take!(io))
-        io2 = IOBuffer(res)
-
-        stats = readlines(io2; keep=false)
-
-        return makeStruct.(parseStat.(stats))
-        #return files
-    catch e
-        rethrow()
     end
 
 
@@ -584,19 +621,19 @@ upload.(sftp,files)
 """
 function upload(sftp::SFTP,
     file_name::AbstractString)
+    return with_sftp_lock(sftp) do
+        open(file_name, "r") do local_file
 
 
-    open(file_name, "r") do local_file
+            file = escapeuri(basename(file_name))
 
+            uri = resolvereference(sftp.uri, file)
 
-        file = escapeuri(basename(file_name))
+            output = Downloads.request(string(uri), input=local_file; downloader=sftp.downloader)
+        end
 
-        uri = resolvereference(sftp.uri, file)
-
-        output = Downloads.request(string(uri), input=local_file; downloader=sftp.downloader)
+        return nothing
     end
-
-    return nothing
 end
 
 
@@ -626,35 +663,35 @@ function download(
     sftp::SFTP,
     file_name::AbstractString,
     output=tempname(); downloadDir::Union{String,Nothing}=nothing)
+    return with_sftp_lock(sftp) do
+        if file_name == "." || file_name == ".."
+            return
+        end
 
+        if downloadDir != nothing
+            output = joinpath(abspath(downloadDir), file_name)
+        end
 
-    if file_name == "." || file_name == ".."
-        return
+        # Use escapepath (not escapeuri) to preserve '/' in multi-segment paths
+        uri = resolvereference(sftp.uri, escapepath(file_name))
+
+        # Override easy_hook to remove CURLOPT_DIRLISTONLY (set by reset_easy_hook for readdir)
+        sftp.downloader.easy_hook = (easy, info) -> begin
+            setStandardOptions(sftp, easy, info)
+        end
+
+        try
+
+            output = Downloads.download(string(uri), output; sftp.downloader)
+
+        catch e
+
+            rethrow()
+        finally
+            reset_easy_hook(sftp)
+        end
+        return output
     end
-
-    if downloadDir != nothing
-        output = joinpath(abspath(downloadDir), file_name)
-    end
-
-    # Use escapepath (not escapeuri) to preserve '/' in multi-segment paths
-    uri = resolvereference(sftp.uri, escapepath(file_name))
-
-    # Override easy_hook to remove CURLOPT_DIRLISTONLY (set by reset_easy_hook for readdir)
-    sftp.downloader.easy_hook = (easy, info) -> begin
-        setStandardOptions(sftp, easy, info)
-    end
-
-    try
-
-        output = Downloads.download(string(uri), output; sftp.downloader)
-
-    catch e
-
-        rethrow()
-    finally
-        reset_easy_hook(sftp)
-    end
-    return output
 end
 
 """
@@ -664,42 +701,44 @@ Reads the current directory. Returns a vector of Strings just like the regular r
 
 """
 function Base.readdir(sftp::SFTP, join::Bool=false, sort::Bool=true)
-    output = nothing
+    return with_sftp_lock(sftp) do
+        output = nothing
 
-    try
-        uriString = string(sftp.uri)
-        if !endswith(uriString, "/")
-            uriString = uriString * "/"
-            sftp.uri = URI(uriString)
+        try
+            uriString = string(sftp.uri)
+            if !endswith(uriString, "/")
+                uriString = uriString * "/"
+                sftp.uri = URI(uriString)
+            end
+
+            #println("URI String $uriString")
+
+            dir = sftp.uri.path
+
+
+            io = IOBuffer()
+
+            output = Downloads.download(uriString, io; sftp.downloader)
+
+
+            # Don't know why this is necessary
+            res = String(take!(io))
+            io2 = IOBuffer(res)
+            files = readlines(io2; keep=false)
+
+            files = filter(x -> x != "..", files)
+
+            files = filter(x -> x != ".", files)
+
+
+            sort && sort!(files)
+
+            join && return joinpath.(dir, files)
+
+            return files
+        catch e
+            rethrow()
         end
-
-        #println("URI String $uriString")
-
-        dir = sftp.uri.path
-
-
-        io = IOBuffer()
-
-        output = Downloads.download(uriString, io; sftp.downloader)
-
-
-        # Don't know why this is necessary
-        res = String(take!(io))
-        io2 = IOBuffer(res)
-        files = readlines(io2; keep=false)
-
-        files = filter(x -> x != "..", files)
-
-        files = filter(x -> x != ".", files)
-
-
-        sort && sort!(files)
-
-        join && return joinpath.(dir, files)
-
-        return files
-    catch e
-        rethrow()
     end
 
 end
@@ -711,28 +750,29 @@ end
 
 """
 function Base.cd(sftp::SFTP, dir::AbstractString)
+    return with_sftp_lock(sftp) do
+        oldUrl = sftp.uri
 
-    oldUrl = sftp.uri
+        # If we fail, set back to the old url
+        try
 
-    # If we fail, set back to the old url
-    try
+            if !isdirpath(dir)
+                dir = dir * "/"
+            end
 
-        if !isdirpath(dir)
-            dir = dir * "/"
+            newUrl = resolvereference(oldUrl, sftpescapepath(dir))
+
+            #show(newUrl)
+
+            sftp.uri = newUrl
+            #show(sftp.uri)
+            readdir(sftp)
+        catch e
+            sftp.uri = oldUrl
+            rethrow()
         end
-
-        newUrl = resolvereference(oldUrl, sftpescapepath(dir))
-
-        #show(newUrl)
-
-        sftp.uri = newUrl
-        #show(sftp.uri)
-        readdir(sftp)
-    catch e
-        sftp.uri = oldUrl
-        rethrow()
+        return nothing
     end
-    return nothing
 end
 
 
