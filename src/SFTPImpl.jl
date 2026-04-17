@@ -54,8 +54,13 @@ struct SFTPStatStruct
     mtime::Float64
 end
 
-function with_sftp_lock(lock)
-
+function with_sftp_lock(f::Function, sftp::SFTP)
+    lock(sftp.op_lock)
+    try
+        return f()
+    finally
+        unlock(sftp.op_lock)
+    end
 end
 
 function check_and_create_fingerprint(hostNameOrIP::AbstractString)
