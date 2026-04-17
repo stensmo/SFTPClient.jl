@@ -54,6 +54,10 @@ struct SFTPStatStruct
     mtime::Float64
 end
 
+function with_sftp_lock(lock)
+
+end
+
 function check_and_create_fingerprint(hostNameOrIP::AbstractString)
     dir = homedir()
 
