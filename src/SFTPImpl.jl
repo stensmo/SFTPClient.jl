@@ -117,7 +117,11 @@ function create_fingerprint(hostNameOrIP::AbstractString)
     known_hosts = joinpath(dir, ".ssh", "known_hosts")
     keyscan = ""
     try 
-        keyscan = readchomp(`ssh-keyscan -t ecdsa $(hostNameOrIP)`)
+        if Sys.iswindows()
+            keyscan = readchomp(`ssh-keyscan -t rsa $(hostNameOrIP)`)
+        else
+            keyscan = readchomp(`ssh-keyscan -t ecdsa $(hostNameOrIP)`)
+        end
     catch e
         try
             keyscan = readchomp(`ssh-keyscan -t rsa $(hostNameOrIP)`)
